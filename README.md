@@ -48,7 +48,7 @@ Le **frontend FutureKawa** est une application web Angular permettant de :
 │      Navigation entre les pages            │
 ├────────────────────────────────────────────┤
 │                Pages                       │
-│  welcome / dashboard / pay / entrepot / lots
+│  welcome / dashboard / pays / entrepot / lots
 ├────────────────────────────────────────────┤
 │          Shared Components                 │
 │     navbar / sidebar / stat-card           │
@@ -81,7 +81,7 @@ futurekawa-frontend/
         │   ├── dashboard/
         │   ├── entrepot/
         │   ├── lots/
-        │   ├── pay/
+        │   ├── pays/
         │   └── welcome/
         │
         └── services/           # Logique métier et appels API HTTP (Core)
@@ -93,24 +93,14 @@ futurekawa-frontend/
 
 Le routage est centralisé dans `app.routes.ts`.
 
-### Routes principales
-
 | Route        | Page associée | Description |
 |--------------|---------------|-------------|
 | `/`          | redirection   | Redirige vers la page d’accueil |
 | `/welcome`   | Welcome       | Page d’accueil / introduction |
 | `/dashboard` | Dashboard     | Tableau de bord principal |
-| `/pay`       | Pay           | Page de paiement |
+| `/pays/:code`       | Pays           | Affiche une vue liée à un pays via un paramètre d’URL |
 | `/entrepot`  | Entrepot      | Liste ou vue des entrepôts |
 | `/lots`      | Lots          | Liste ou vue des lots |
-
-### Exemple de route dynamique
-
-Si activée dans le projet, une route dynamique peut aussi être utilisée :
-
-| Route         | Description |
-|---------------|-------------|
-| `/pays/:code` | Affiche une vue liée à un pays via un paramètre d’URL |
 
 ---
 
