@@ -141,6 +141,8 @@ Composant réutilisable pour afficher :
 - une icône
 - éventuellement une tendance ou un texte complémentaire
 
+if you need icon check this : https://heroicons.com/
+
 ---
 ## [🚀 Lancement du projet](./angular.md)
 
