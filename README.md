@@ -1,59 +1,155 @@
-# AppKawa
+# ☕ FutureKawa - Frontend Web
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.5.
+> **Frontend web pour la visualisation et la gestion des données FutureKawa**
+> *Application Angular standalone avec dashboard, navigation par pages et composants réutilisables*
 
-## Development server
+---
 
-To start a local development server, run:
+## 📋 Table des matières
 
-```bash
-ng serve
+- [☕ FutureKawa - Frontend Web](#-futurekawa---frontend-web)
+  - [📋 Table des matières](#-table-des-matières)
+  - [🌍 Aperçu](#-aperçu)
+  - [🏗️ Architecture](#️-architecture)
+    - [Architecture frontend](#architecture-frontend)
+  - [📁 Structure du projet](#-structure-du-projet)
+  - [🧭 Navigation](#-navigation)
+  - [🧩 Composants UI](#-composants-ui)
+  - [🚀 Lancement du projet](#-lancement-du-projet)
+  - [🛠️ Build](#️-build)
+  - [📝 Licence](#-licence)
+
+---
+
+## 🌍 Aperçu
+
+Le **frontend FutureKawa** est une application web Angular permettant de :
+
+- 📊 **Afficher un dashboard** avec cartes de statistiques et vues principales
+- 🌍 **Naviguer entre plusieurs pages métier**
+- 🏭 **Consulter les entrepôts**
+- 📦 **Consulter les lots**
+- 💳 **Accéder à une page de paiement**
+- 🧭 **Utiliser une navigation claire** avec sidebar et navbar
+- ♻️ **Réutiliser des composants UI** pour garder un projet propre et maintenable
+
+---
+
+## 🏗️ Architecture
+
+### Architecture frontend
+
+```text
+┌────────────────────────────────────────────┐
+│           App Root (app.ts)                │
+│      Layout global + RouterOutlet          │
+├────────────────────────────────────────────┤
+│           Routing (app.routes.ts)          │
+│      Navigation entre les pages            │
+├────────────────────────────────────────────┤
+│                Pages                       │
+│  welcome / dashboard / pay / entrepot / lots
+├────────────────────────────────────────────┤
+│          Shared Components                 │
+│     navbar / sidebar / stat-card           │
+├────────────────────────────────────────────┤
+│              Styles SCSS                   │
+│   styles globaux + styles par composant    │
+└────────────────────────────────────────────┘
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+L’application repose sur une architecture **standalone Angular**, avec un découpage simple entre les pages métier et les composants réutilisables.
 
-## Code scaffolding
+---
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+## 📁 Structure du projet
 
-```bash
-ng generate component component-name
+```text
+futurekawa-frontend/
+├── public/                     # Fichiers statiques et assets publics
+└── src/                        # Code source de l'application
+    └── app/                    # Cœur de l'application Angular
+        │
+        ├── components/         # Composants UI réutilisables (Shared)
+        │   ├── navbar/
+        │   ├── sidebar/
+        │   └── stat-card/
+        │
+        ├── models/             # Interfaces et classes métiers (DTOs)
+        │
+        ├── pages/              # Pages principales (Features)
+        │   ├── dashboard/
+        │   ├── entrepot/
+        │   ├── lots/
+        │   ├── pay/
+        │   └── welcome/
+        │
+        └── services/           # Logique métier et appels API HTTP (Core)
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+---
 
-```bash
-ng generate --help
-```
+## 🧭 Navigation
 
-## Building
+Le routage est centralisé dans `app.routes.ts`.
 
-To build the project run:
+### Routes principales
 
-```bash
-ng build
-```
+| Route        | Page associée | Description |
+|--------------|---------------|-------------|
+| `/`          | redirection   | Redirige vers la page d’accueil |
+| `/welcome`   | Welcome       | Page d’accueil / introduction |
+| `/dashboard` | Dashboard     | Tableau de bord principal |
+| `/pay`       | Pay           | Page de paiement |
+| `/entrepot`  | Entrepot      | Liste ou vue des entrepôts |
+| `/lots`      | Lots          | Liste ou vue des lots |
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+### Exemple de route dynamique
 
-## Running unit tests
+Si activée dans le projet, une route dynamique peut aussi être utilisée :
 
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+| Route         | Description |
+|---------------|-------------|
+| `/pays/:code` | Affiche une vue liée à un pays via un paramètre d’URL |
 
-```bash
-ng test
-```
+---
 
-## Running end-to-end tests
+## 🧩 Composants UI
 
-For end-to-end (e2e) testing, run:
+### `navbar`
 
-```bash
-ng e2e
-```
+Composant d’en-tête contenant :
+- barre de recherche
+- notifications
+- langue
+- profil utilisateur
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+### `sidebar`
 
-## Additional Resources
+Composant de navigation latérale contenant :
+- accès au dashboard
+- accès aux pages métier
+- logo FutureKawa
+- mode réduit / plié
+- navigation principale de l’application
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+### `stat-card`
+
+Composant réutilisable pour afficher :
+- un titre
+- une valeur
+- une icône
+- éventuellement une tendance ou un texte complémentaire
+
+---
+## [🚀 Lancement du projet](./angular.md)
+
+---
+
+## 📝 Licence
+
+Projet réalisé dans le cadre de la **MSPR - Bloc 4** (EPSI/EISI 2026).
+
+---
+
+*Made with ☕ and ❤️ by FutureKawa Team*

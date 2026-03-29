@@ -1,0 +1,30 @@
+.stat-card {
+  display: flex;
+  align-items: center;
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  min-width: 200px;
+
+  .icon {
+    font-size: 2.5rem;
+    margin-right: 20px;
+  }
+
+  .details {
+    h3 {
+      margin: 0;
+      font-size: 0.9rem;
+      color: #7f8c8d;
+      text-transform: uppercase;
+    }
+
+    .value {
+      margin: 5px 0 0 0;
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #2c3e50;
+    }
+  }
+}

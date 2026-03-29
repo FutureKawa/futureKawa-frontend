@@ -1,0 +1,156 @@
+.sidebar {
+  position: fixed;
+  display: flex;
+  flex-direction: column;
+  width: var(--sidebar-width);
+  height: 100vh;
+  background-color: var(--white);
+  border-right: 1px solid var(--border-color);
+  z-index: 10;
+  transition: width 0.3s ease;
+
+  .logo {
+    text-decoration: none;
+    display: block;
+  }
+
+  &.collapsed {
+    width: 80px;
+
+    .sidebar-header {
+      flex-direction: row;
+      justify-content: center;
+      gap: 8px;
+      padding: 20px 10px;
+    }
+
+    .logo {
+      font-size: 22px;
+    }
+
+    .toggle-btn .icon-toggle {
+      width: 20px;
+      height: 20px;
+    }
+
+    .nav-menu {
+      padding: 0 5px;
+    }
+
+    .nav-item {
+      padding: 12px;
+      justify-content: center;
+    }
+
+    .icon {
+      margin-right: 0;
+    }
+
+    .sidebar-bottom {
+      padding: 10px;
+    }
+  }
+}
+
+.sidebar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px;
+}
+
+.logo {
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--primary-color);
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.toggle-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5px;
+  background: none;
+  border: none;
+  border-radius: 8px;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background-color: #f0f4f8;
+    color: var(--primary-color);
+  }
+
+  .icon-toggle {
+    width: 24px;
+    height: 24px;
+  }
+}
+
+.nav-menu {
+  flex: 1;
+  padding: 0 15px;
+  overflow-y: auto;
+}
+
+.nav-section {
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
+
+.nav-title {
+  padding: 0 20px;
+  margin-bottom: 10px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  padding: 12px 20px;
+  margin-bottom: 5px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-main);
+  text-decoration: none;
+  white-space: nowrap;
+  border-radius: 8px;
+  transition: all 0.2s;
+
+  &.active {
+    color: var(--white);
+    background-color: var(--primary-color);
+  }
+
+  &:not(.active):hover {
+    color: var(--primary-color);
+    background-color: #f4f7fe;
+  }
+}
+
+.icon {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  margin-right: 15px;
+}
+
+.sidebar-bottom {
+  padding: 20px;
+  border-top: 1px solid var(--border-color);
+}
+
+.sidebar-footer {
+  margin-top: 20px;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--text-muted);
+  text-align: center;
+}
