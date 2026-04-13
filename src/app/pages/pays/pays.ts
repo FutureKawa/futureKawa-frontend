@@ -1,12 +1,13 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { PaysChart } from './pays-chart/pays-chart';
+import { StatCardComponent } from '../../components/stat-card/stat-card';
 import { countries, getCountryByCode, getCountryStatsByCode, type Country } from './pays-data';
 
 @Component({
   selector: 'app-pay',
   standalone: true,
-  imports: [PaysChart],
+  imports: [PaysChart, StatCardComponent],
   templateUrl: './pays.html',
   styleUrl: './pays.scss'
 })

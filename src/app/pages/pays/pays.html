@@ -3,38 +3,26 @@
 
   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-4">
     @for (stat of stats(); track stat.title) {
-      <div class="bg-white shadow rounded-xl p-4">
-        <!-- HEADER -->
-        <div class="flex items-top justify-between gap-6">
-          <div class="space-y-2">
-            <p class="text-sm text-gray-500">{{ stat.title }}</p>
-            <span class="text-xl font-bold">{{ stat.value }}</span>
-          </div>
-
-          <img [src]="stat.icon" alt="icon" class="w-14 h-14" />
-        </div>
-
-        <!-- FOOTER -->
-        <div class="mt-5 flex items-center gap-2">
+      <app-stat-card title="{{ stat.title }}" [value]="stat.value" iconColor="violet">
+        <img icon [src]="stat.icon" alt="icon" class="w-10 h-10" />
+        <div class="mt-4 flex items-center gap-2 text-sm text-[#12163C]">
           <img
             [src]="stat.trend === 'up' ? '/images/gotop.svg' : '/images/godown.svg'"
             alt=""
-            class="w-5 h-5"
+            class="w-4 h-4"
           />
-
           <span
-            class="text-sm font-semibold"
+            class="font-semibold"
             [class.text-[#00B69B]]="stat.trend === 'up'"
             [class.text-red-500]="stat.trend === 'down'"
           >
             {{ stat.percent }}
           </span>
-
-          <span class="text-[#12163C]">
+          <span>
             {{ stat.trend === 'up' ? 'Up from yesterday' : 'Down from yesterday' }}
           </span>
         </div>
-      </div>
+      </app-stat-card>
     }
   </div>
 
