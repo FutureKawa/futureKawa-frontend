@@ -9,6 +9,7 @@ export const routes: Routes = [
   { path: '', redirectTo: 'welcome', pathMatch: 'full' },
   { path: 'welcome', component: WelcomeComponent },
   { path: 'dashboard', component: DashboardComponent },
+  { path: 'pays/:paysId/entrepot/:entrepotId', component: EntrepotComponent },
   { path: 'pays/:code', component: PaysComponent },
   { path: 'pays', component: PaysComponent },
   { path: 'entrepot', component: EntrepotComponent },
