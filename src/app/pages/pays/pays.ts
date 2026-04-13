@@ -1,9 +1,11 @@
 import { Component, inject, signal } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { PaysChart } from './pays-chart/pays-chart';
 
 @Component({
   selector: 'app-pay',
   standalone: true,
+  imports: [PaysChart],
   templateUrl: './pays.html',
   styleUrl: './pays.scss'
 })
