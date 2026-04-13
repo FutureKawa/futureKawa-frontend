@@ -1,19 +1,8 @@
-import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Input, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import * as L from 'leaflet';
-
-interface Entrepot {
-  id: number;
-  name: string;
-  city: string;
-  stock: string;
-  stockUnit: string;
-  status: string;
-  statusLabel: string;
-  latitude: number;
-  longitude: number;
-}
+import { entrepots as allEntrepots, getCountryByCode, type Entrepot } from '../pays-data';
 
 @Component({
   selector: 'app-pays-chart',
@@ -22,58 +11,18 @@ interface Entrepot {
   templateUrl: './pays-chart.html',
   styleUrl: './pays-chart.scss',
 })
-export class PaysChart implements AfterViewInit {
+export class PaysChart implements AfterViewInit, OnChanges {
+  @Input() countryCode: string | null = null;
   @ViewChild('map', { static: true }) mapContainer!: ElementRef<HTMLDivElement>;
 
-  entrepots: Entrepot[] = [
-    {
-      id: 1,
-      name: 'Entrepôt Recife',
-      city: 'Recife',
-      stock: '8 050',
-      stockUnit: 'kg',
-      status: 'CONFORME',
-      statusLabel: 'conforme',
-      latitude: -8.0476,
-      longitude: -34.8770,
-    },
-    {
-      id: 2,
-      name: 'Entrepôt Belo Horizonte',
-      city: 'Belo Horizonte',
-      stock: '12 300',
-      stockUnit: 'kg',
-      status: 'CONFORME',
-      statusLabel: 'conforme',
-      latitude: -19.9245,
-      longitude: -43.9352,
-    },
-    {
-      id: 3,
-      name: 'Entrepôt São Paulo',
-      city: 'São Paulo',
-      stock: '19 600',
-      stockUnit: 'kg',
-      status: 'ACTIF',
-      statusLabel: 'actif',
-      latitude: -23.5505,
-      longitude: -46.6333,
-    },
-    {
-      id: 4,
-      name: 'Entrepôt Rio de Janeiro',
-      city: 'Rio de Janeiro',
-      stock: '5 200',
-      stockUnit: 'kg',
-      status: 'INACTIF',
-      statusLabel: 'inactif',
-      latitude: -22.9068,
-      longitude: -43.1729,
-    },
-  ];
-
+  entrepots: Entrepot[] = allEntrepots;
   selectedEntrepot: Entrepot | null = null;
   private map!: L.Map;
+  private markers: L.CircleMarker[] = [];
+
+  get countryName(): string {
+    return getCountryByCode(this.countryCode)?.name ?? 'Pays';
+  }
 
   ngAfterViewInit() {
     this.map = L.map(this.mapContainer.nativeElement, {
@@ -89,7 +38,23 @@ export class PaysChart implements AfterViewInit {
       attribution: '&copy; OpenStreetMap contributors',
     }).addTo(this.map);
 
-    this.entrepots.forEach((entrepot) => {
+    this.updateMarkers();
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (this.map && changes['countryCode']) {
+      this.selectedEntrepot = null;
+      this.map.closePopup();
+      this.updateMarkers();
+    }
+  }
+
+  private updateMarkers() {
+    this.clearMarkers();
+    const center = getCountryByCode(this.countryCode)?.defaultCenter ?? [-14.2350, -51.9253];
+    this.map.setView(center, 4);
+
+    this.visibleEntrepots.forEach((entrepot) => {
       const marker = L.circleMarker([entrepot.latitude, entrepot.longitude], {
         radius: 10,
         color: '#ffffff',
@@ -122,7 +87,19 @@ export class PaysChart implements AfterViewInit {
       marker.on('click', () => {
         this.selectedEntrepot = entrepot;
       });
+      this.markers.push(marker);
     });
+  }
+
+  private clearMarkers() {
+    this.markers.forEach(marker => marker.remove());
+    this.markers = [];
+  }
+
+  get visibleEntrepots() {
+    return this.countryCode
+      ? this.entrepots.filter(entrepot => entrepot.countryCode === this.countryCode)
+      : this.entrepots;
   }
 
   closePopup() {

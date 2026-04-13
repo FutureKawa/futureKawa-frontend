@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
+import { countries } from '../../pages/pays/pays-data';
 
 @Component({
   selector: 'app-sidebar',
@@ -10,6 +11,7 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
 })
 export class SidebarComponent {
   isCollapsed = false;
+  readonly countries = countries;
 
   @Output() toggleSidebar = new EventEmitter<boolean>();
 
