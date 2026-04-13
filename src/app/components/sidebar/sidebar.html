@@ -34,18 +34,12 @@
     <div class="nav-section">
       @if (!isCollapsed) { <div class="nav-title">PAYS</div> }
 
-      <a routerLink="/pays/br" routerLinkActive="active" class="nav-item">
-        <span class="icon">🇧🇷</span>
-        @if (!isCollapsed) { <span class="text">Brésil</span> }
-      </a>
-      <a routerLink="/pays/ec" routerLinkActive="active" class="nav-item">
-        <span class="icon">🇪🇨</span>
-        @if (!isCollapsed) { <span class="text">Equateur</span> }
-      </a>
-      <a routerLink="/pays/co" routerLinkActive="active" class="nav-item">
-        <span class="icon">🇨🇴</span>
-        @if (!isCollapsed) { <span class="text">Colombie</span> }
-      </a>
+      @for (country of countries; track country.code) {
+        <a [routerLink]="['/pays', country.code]" routerLinkActive="active" class="nav-item">
+          <span class="icon">{{ country.emoji }}</span>
+          @if (!isCollapsed) { <span class="text">{{ country.name }}</span> }
+        </a>
+      }
     </div>
 
     <div class="nav-section">
