@@ -1,0 +1,490 @@
+// ─── Page wrapper ────────────────────────────────────────────────────────────
+
+.page-wrapper {
+  padding: 28px 32px;
+  min-height: 100vh;
+  background: var(--bg-body);
+}
+
+// ─── En-tête ─────────────────────────────────────────────────────────────────
+
+.page-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 28px;
+}
+
+.back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-muted);
+  background: none;
+  border: 1.5px solid var(--border-color);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+
+  svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  &:hover {
+    color: var(--primary-color);
+    border-color: var(--primary-color);
+    background: #f4f7ff;
+  }
+}
+
+.page-title {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--text-main);
+  margin: 0;
+}
+
+// ─── KPI Grid ────────────────────────────────────────────────────────────────
+
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  margin-bottom: 28px;
+
+  @media (max-width: 1100px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  @media (max-width: 600px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.kpi-card {
+  background: var(--white);
+  border-radius: 14px;
+  padding: 20px 22px 18px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.kpi-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.kpi-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-muted);
+  line-height: 1.3;
+  max-width: 120px;
+}
+
+.kpi-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  svg {
+    width: 22px;
+    height: 22px;
+  }
+
+  &--violet {
+    background: #f0ecff;
+    color: #7c3aed;
+  }
+
+  &--orange {
+    background: #fff3e0;
+    color: #e65c00;
+  }
+
+  &--green {
+    background: #e6f8f5;
+    color: #00b69b;
+  }
+
+  &--pink {
+    background: #fde8ed;
+    color: #f93c65;
+  }
+}
+
+.kpi-value {
+  font-size: 30px;
+  font-weight: 800;
+  color: var(--text-main);
+  margin: 0;
+  line-height: 1;
+}
+
+// ─── Layout 2 colonnes ───────────────────────────────────────────────────────
+
+.detail-layout {
+  display: grid;
+  grid-template-columns: 340px 1fr;
+  gap: 20px;
+  align-items: start;
+
+  @media (max-width: 960px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.card {
+  background: var(--white);
+  border-radius: 14px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+  overflow: hidden;
+}
+
+// ─── Fiche entrepôt (colonne gauche) ─────────────────────────────────────────
+
+.fiche-card {
+  padding: 0 0 24px;
+}
+
+.fiche-illustration {
+  background: #eff6ff;
+  padding: 28px 24px 16px;
+  display: flex;
+  justify-content: center;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.warehouse-svg {
+  width: 100%;
+  max-width: 260px;
+  height: auto;
+}
+
+.fiche-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-main);
+  padding: 18px 22px 10px;
+  margin: 0;
+
+  .pin-icon {
+    width: 18px;
+    height: 18px;
+    color: var(--primary-color);
+    flex-shrink: 0;
+  }
+}
+
+.fiche-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13.5px;
+
+  tr {
+    border-top: 1px solid var(--border-color);
+
+    &:first-child {
+      border-top: none;
+    }
+
+    &:hover {
+      background: #fafbff;
+    }
+  }
+
+  td {
+    padding: 10px 22px;
+    vertical-align: top;
+  }
+
+  .fiche-label {
+    color: var(--primary-color);
+    font-weight: 700;
+    width: 145px;
+    white-space: nowrap;
+  }
+}
+
+.email-link {
+  color: var(--primary-color);
+  text-decoration: none;
+  word-break: break-all;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+// ─── Liste des lots (colonne droite) ─────────────────────────────────────────
+
+.lots-card {
+  padding: 22px 24px;
+}
+
+.lots-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-main);
+  margin: 0 0 18px;
+}
+
+.table-scroll {
+  overflow-x: auto;
+}
+
+.lots-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13.5px;
+  white-space: nowrap;
+
+  thead tr {
+    border-bottom: 2px solid var(--border-color);
+  }
+
+  th {
+    padding: 10px 14px;
+    text-align: left;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+  }
+
+  tbody tr {
+    border-bottom: 1px solid var(--border-color);
+    transition: background 0.15s;
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    &:hover {
+      background: #fafbff;
+    }
+  }
+
+  td {
+    padding: 12px 14px;
+    color: var(--text-main);
+    vertical-align: middle;
+  }
+}
+
+// ── Vignette lot ──────────────────────────────────────────────────────────────
+
+.lot-thumb {
+  width: 38px;
+  height: 38px;
+  border-radius: 8px;
+  background: #fef3c7;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  svg {
+    width: 22px;
+    height: 22px;
+  }
+}
+
+.lot-type {
+  font-weight: 700;
+  letter-spacing: 0.3px;
+}
+
+.lot-date {
+  color: var(--text-muted);
+}
+
+// ── Badges statut ─────────────────────────────────────────────────────────────
+
+.badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+
+  &--conforme {
+    background: #e6f8f5;
+    color: #00875a;
+  }
+
+  &--alerte {
+    background: #fff3e0;
+    color: #c45e00;
+  }
+
+  &--perime {
+    background: #fde8ed;
+    color: #c9002f;
+  }
+}
+
+// ── Boutons d'action ──────────────────────────────────────────────────────────
+
+.actions-cell {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.action-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+
+  svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  &--view {
+    background: #f0f4ff;
+    color: var(--primary-color);
+
+    &:hover {
+      background: var(--primary-color);
+      color: var(--white);
+    }
+  }
+
+  &--delete {
+    background: #fde8ed;
+    color: var(--danger);
+
+    &:hover {
+      background: var(--danger);
+      color: var(--white);
+    }
+  }
+}
+
+// ─── État vide ────────────────────────────────────────────────────────────────
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 24px;
+  color: var(--text-muted);
+  gap: 12px;
+  text-align: center;
+
+  svg {
+    width: 40px;
+    height: 40px;
+    opacity: 0.4;
+  }
+
+  p {
+    font-size: 14px;
+    font-weight: 600;
+    margin: 0;
+  }
+}
+
+// ─── État erreur ──────────────────────────────────────────────────────────────
+
+.error-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
+  gap: 14px;
+  color: var(--danger);
+  text-align: center;
+
+  svg {
+    width: 48px;
+    height: 48px;
+  }
+
+  p {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-main);
+    margin: 0;
+  }
+}
+
+.retry-btn {
+  padding: 10px 24px;
+  background: var(--primary-color);
+  color: var(--white);
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: opacity 0.2s;
+
+  &:hover {
+    opacity: 0.88;
+  }
+}
+
+// ─── Skeletons (loading) ──────────────────────────────────────────────────────
+
+@keyframes shimmer {
+  0%   { background-position: -600px 0; }
+  100% { background-position:  600px 0; }
+}
+
+.skeleton {
+  border-radius: 12px;
+  background: linear-gradient(90deg, #e8edf2 25%, #f4f6f9 50%, #e8edf2 75%);
+  background-size: 600px 100%;
+  animation: shimmer 1.4s infinite linear;
+}
+
+.skeleton-page {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.skeleton--title {
+  height: 36px;
+  width: 280px;
+}
+
+.skeleton--card {
+  height: 110px;
+}
+
+.skeleton--fiche {
+  height: 420px;
+  border-radius: 14px;
+}
+
+.skeleton--table {
+  height: 420px;
+  border-radius: 14px;
+}
