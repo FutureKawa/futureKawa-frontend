@@ -4,10 +4,10 @@ import { Component, Input } from '@angular/core';
   selector: 'app-stat-card',
   standalone: true,
   templateUrl: './stat-card.html',
-  styleUrl: './stat-card.scss'
+  styleUrl: './stat-card.scss',
 })
 export class StatCardComponent {
-  @Input() title: string = 'Titre par défaut';
-  @Input() value: string | number = '0';
-  @Input() icon: string = '📊';
+  @Input() title: string = '';
+  @Input() value: string | number = 0;
+  @Input() iconColor: 'violet' | 'orange' | 'green' | 'pink' = 'violet';
 }
