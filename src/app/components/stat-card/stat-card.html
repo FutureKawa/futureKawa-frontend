@@ -1,7 +1,9 @@
 <div class="stat-card">
-  <div class="icon">{{ icon }}</div>
-  <div class="details">
-    <h3>{{ title }}</h3>
-    <p class="value">{{ value }}</p>
+  <div class="stat-top">
+    <span class="stat-label">{{ title }}</span>
+    <div class="stat-icon stat-icon--{{ iconColor }}">
+      <ng-content select="[icon]"></ng-content>
+    </div>
   </div>
+  <p class="stat-value">{{ value }}</p>
 </div>

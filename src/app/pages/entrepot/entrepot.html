@@ -1,1 +1,219 @@
-<p>entrepot works!</p>
+<div class="page-wrapper">
+
+  <!-- ── État chargement ── -->
+  @if (isLoading()) {
+    <div class="skeleton-page">
+      <div class="skeleton skeleton--title"></div>
+      <div class="kpi-grid">
+        <div class="skeleton skeleton--card"></div>
+        <div class="skeleton skeleton--card"></div>
+        <div class="skeleton skeleton--card"></div>
+        <div class="skeleton skeleton--card"></div>
+      </div>
+      <div class="detail-layout">
+        <div class="skeleton skeleton--fiche"></div>
+        <div class="skeleton skeleton--table"></div>
+      </div>
+    </div>
+  }
+
+  <!-- ── État erreur ── -->
+  @if (hasError()) {
+    <div class="error-state">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z" />
+      </svg>
+      <p>Impossible de charger les données de l'entrepôt.</p>
+      <button class="retry-btn" (click)="loadData()">Réessayer</button>
+    </div>
+  }
+
+  <!-- ── Contenu principal ── -->
+  @if (!isLoading() && !hasError()) {
+
+    <!-- En-tête -->
+    <div class="page-header">
+      <button class="back-btn" (click)="goBack()">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
+        </svg>
+        Retour
+      </button>
+      <h1 class="page-title">Entrepot {{ entrepot()?.nom }}</h1>
+    </div>
+
+    <!-- KPI Cardss -->
+    <div class="kpi-grid">
+
+      <app-stat-card title="Lots Actifs" [value]="formatNum(stats()!.lotsActifs)" iconColor="violet">
+        <svg icon xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 0 0 2.625.372 9.337 9.337 0 0 0 4.121-.952 4.125 4.125 0 0 0-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 0 1 8.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0 1 11.964-3.07M12 6.375a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0Zm8.25 2.25a2.625 2.625 0 1 1-5.25 0 2.625 2.625 0 0 1 5.25 0Z" />
+        </svg>
+      </app-stat-card>
+
+      <app-stat-card title="Nombre total de lots" [value]="formatNum(stats()!.totalLots)" iconColor="orange">
+        <svg icon xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="m20.25 7.5-.625 10.632a2.25 2.25 0 0 1-2.247 2.118H6.622a2.25 2.25 0 0 1-2.247-2.118L3.75 7.5M10 11.25h4M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125Z" />
+        </svg>
+      </app-stat-card>
+
+      <app-stat-card title="Qualité Moyenne" [value]="formatNum(stats()!.qualiteMoyenne)" iconColor="green">
+        <svg icon xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 0 1 3 19.875v-6.75ZM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V8.625ZM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V4.125Z" />
+        </svg>
+      </app-stat-card>
+
+      <app-stat-card title="Alertes" [value]="formatNum(stats()!.alertes)" iconColor="pink">
+        <svg icon xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z" />
+        </svg>
+      </app-stat-card>
+
+    </div>
+
+    <!-- ── Contenu : 2 colonnes ── -->
+    <div class="detail-layout">
+
+      <!-- Colonne gauche : Fiche entrepôt -->
+      <div class="card fiche-card">
+
+        <!-- Illustration -->
+        <div class="fiche-illustration">
+          <svg viewBox="0 0 280 160" xmlns="http://www.w3.org/2000/svg" class="warehouse-svg" aria-label="entrepot">
+            <rect x="10" y="148" width="260" height="5" rx="2.5" fill="#cbd5e1"/>
+            <rect x="28" y="72" width="224" height="80" rx="4" fill="#dbeafe"/>
+            <polygon points="18,74 140,16 262,74" fill="#3b82f6"/>
+            <polygon points="18,74 140,16 262,74" fill="none" stroke="#2563eb" stroke-width="1.5"/>
+            <rect x="108" y="104" width="64" height="48" rx="3" fill="#1e40af"/>
+            <circle cx="161" cy="128" r="4" fill="#93c5fd"/>
+            <rect x="46" y="92" width="44" height="32" rx="3" fill="#bfdbfe" opacity="0.8"/>
+            <line x1="68" y1="92" x2="68" y2="124" stroke="#60a5fa" stroke-width="1.5"/>
+            <line x1="46" y1="108" x2="90" y2="108" stroke="#60a5fa" stroke-width="1.5"/>
+            <rect x="190" y="92" width="44" height="32" rx="3" fill="#bfdbfe" opacity="0.8"/>
+            <line x1="212" y1="92" x2="212" y2="124" stroke="#60a5fa" stroke-width="1.5"/>
+            <line x1="190" y1="108" x2="234" y2="108" stroke="#60a5fa" stroke-width="1.5"/>
+            <line x1="18" y1="74" x2="262" y2="74" stroke="#2563eb" stroke-width="1.5" opacity="0.4"/>
+          </svg>
+        </div>
+
+        <!-- Titre -->
+        <h2 class="fiche-title">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="pin-icon">
+            <path fill-rule="evenodd" d="m11.54 22.351.07.04.028.016a.76.76 0 0 0 .723 0l.028-.015.071-.041a16.975 16.975 0 0 0 1.144-.742 19.58 19.58 0 0 0 2.683-2.282c1.944-2.013 3.5-4.697 3.5-8.327a8 8 0 1 0-16 0c0 3.63 1.556 6.314 3.5 8.327a19.583 19.583 0 0 0 2.682 2.282 16.975 16.975 0 0 0 1.144.742ZM12 13.5a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" clip-rule="evenodd" />
+          </svg>
+          Entrepôt {{ entrepot()?.nom }}
+        </h2>
+
+        <!-- Détails -->
+        <table class="fiche-table">
+          <tbody>
+            <tr>
+              <td class="fiche-label">Nom</td>
+              <td>{{ entrepot()?.nom }}</td>
+            </tr>
+            <tr>
+              <td class="fiche-label">Lots</td>
+              <td>{{ entrepot()?.nombreLots }}</td>
+            </tr>
+            <tr>
+              <td class="fiche-label">Adresse</td>
+              <td>{{ entrepot()?.adresse }}</td>
+            </tr>
+            <tr>
+              <td class="fiche-label">Responsable</td>
+              <td>{{ entrepot()?.responsable }}</td>
+            </tr>
+            <tr>
+              <td class="fiche-label">Email responsable</td>
+              <td>
+                <a class="email-link" [href]="'mailto:' + entrepot()?.emailResponsable">
+                  {{ entrepot()?.emailResponsable }}
+                </a>
+              </td>
+            </tr>
+            <tr>
+              <td class="fiche-label">Latitude</td>
+              <td>{{ entrepot()?.latitude }}</td>
+            </tr>
+            <tr>
+              <td class="fiche-label">Longitude</td>
+              <td>{{ entrepot()?.longitude }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Colonne droite : Liste des lots -->
+      <div class="card lots-card">
+        <h2 class="lots-title">Liste des lots</h2>
+
+        @if (lots().length === 0) {
+          <div class="empty-state">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="m20.25 7.5-.625 10.632a2.25 2.25 0 0 1-2.247 2.118H6.622a2.25 2.25 0 0 1-2.247-2.118L3.75 7.5M10 11.25h4M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125Z" />
+            </svg>
+            <p>Aucun lot enregistré pour cet entrepôt.</p>
+          </div>
+        } @else {
+          <div class="table-scroll">
+            <table class="lots-table">
+              <thead>
+                <tr>
+                  <th>Image</th>
+                  <th>Type café</th>
+                  <th>Date Stokage</th>
+                  <th>Poids</th>
+                  <th>Statut</th>
+                  <th>Voir</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (lot of lots(); track lot.id) {
+                  <tr>
+                    <td>
+                      <div class="lot-thumb">
+                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <ellipse cx="12" cy="12" rx="8" ry="5" fill="#92400e" opacity="0.15"/>
+                          <ellipse cx="12" cy="12" rx="7" ry="4" stroke="#92400e" stroke-width="1.5" fill="none"/>
+                          <path d="M5.5 12 Q12 7 18.5 12" stroke="#92400e" stroke-width="1.2" fill="none"/>
+                          <path d="M5.5 12 Q12 17 18.5 12" stroke="#92400e" stroke-width="1.2" fill="none"/>
+                        </svg>
+                      </div>
+                    </td>
+                    <td class="lot-type">{{ lot.typeCafe }}</td>
+                    <td class="lot-date">{{ lot.dateStokage | date:'dd/MM/yyyy HH:mm' }}</td>
+                    <td>{{ lot.poids }} kg</td>
+                    <td>
+                      <span class="badge" [ngClass]="{
+                        'badge--conforme': lot.statut === 'CONFORME',
+                        'badge--alerte':   lot.statut === 'ALERTE',
+                        'badge--perime':   lot.statut === 'PERIME'
+                      }">{{ lot.statut }}</span>
+                    </td>
+                    <td class="actions-cell">
+                      <button class="action-btn action-btn--view" (click)="voirLot(lot.id)" title="Voir le lot">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                        </svg>
+                      </button>
+                      <!-- TODO: activer quand l'API DELETE sera disponible
+                      <button class="action-btn action-btn--delete" (click)="supprimerLot(lot.id)" title="Supprimer le lot">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
+                        </svg>
+                      </button>
+                      -->
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        }
+      </div>
+
+    </div>
+  }
+
+</div>
