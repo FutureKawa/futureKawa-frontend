@@ -36,7 +36,7 @@ export class EntrepotComponent implements OnInit {
     this.isLoading.set(true);
     this.hasError.set(false);
 
-    // TODO: remplacer par HttpClient — exemple :
+    // TODO: remplacer par HttpClient — exemple test :
     // combineLatest([
     //   this.http.get<EntrepotInfo>(`/api/pays/${this.paysId()}/entrepots/${this.entrepotId()}`),
     //   this.http.get<Lot[]>(`/api/pays/${this.paysId()}/entrepots/${this.entrepotId()}/lots`),
