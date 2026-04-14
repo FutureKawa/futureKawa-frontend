@@ -1,11 +1,11 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DatePipe, NgClass } from '@angular/common';
-import { StatCardComponent } from '../../components/stat-card/stat-card';
-import { EntrepotInfo } from '../../shared/models/entrepots/EntrepotInfo';
-import { EntrepotStats } from '../../shared/models/entrepots/EntrepotStats';
-import { Lot } from '../../shared/models/entrepots/Lot';
-import { MOCK_ENTREPOTS, MOCK_LOTS, MOCK_STATS } from '../../app.constants';
+import { StatCardComponent } from '../../../components/stat-card/stat-card';
+import { EntrepotInfo } from '../../../shared/models/entrepots/EntrepotInfo';
+import { EntrepotStats } from '../../../shared/models/entrepots/EntrepotStats';
+import { Lot } from '../../../shared/models/entrepots/Lot';
+import { MOCK_ENTREPOTS, MOCK_LOTS, MOCK_STATS } from '../../../app.constants';
 
 @Component({
   selector: 'app-entrepot',

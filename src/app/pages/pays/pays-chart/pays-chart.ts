@@ -74,7 +74,7 @@ export class PaysChart implements AfterViewInit, OnChanges {
             <div><strong>Stock :</strong> ${entrepot.stock} ${entrepot.stockUnit}</div>
             <div><strong>Status :</strong> ${entrepot.status}</div>
           </div>
-          <button href="/entrepot" class="mt-5 inline-flex w-full justify-center rounded-xl bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700">Voir l'entrepôt</button>
+          <a href="/entrepot" class="mt-5 inline-flex w-full justify-center rounded-xl bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700 text-center">Voir l'entrepôt</a>
         </div>
       `;
 
