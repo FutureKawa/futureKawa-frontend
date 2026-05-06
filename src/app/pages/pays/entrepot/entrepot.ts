@@ -44,10 +44,10 @@ export class EntrepotComponent {
   readonly stats = computed(() => {
     const currentLots = this.lots();
     return {
-      lotsActifs: currentLots.filter(l => l.statut === 'CONFORME').length,
+      lotsActifs: currentLots.filter(l => l.statut?.toUpperCase().includes('CONFORME')).length,
       totalLots: currentLots.length,
-      qualiteMoyenne: currentLots.length > 0 ? 85 : 0,
-      alertes: currentLots.filter(l => l.statut === 'ALERTE').length
+      qualiteMoyenne: currentLots.filter(l => l.statut?.toUpperCase().includes('PERIME')).length,
+      alertes: currentLots.filter(l => l.statut?.toUpperCase().includes('ALERTE')).length
     };
   });
 
@@ -81,6 +81,15 @@ export class EntrepotComponent {
 
   formatNum(n: number): string {
     return n.toLocaleString('fr-FR');
+  }
+
+  getBadgeClass(statut: string | undefined): string {
+    if (!statut) return '';
+    const upper = statut.toUpperCase();
+    if (upper.includes('CONFORME')) return 'badge--conforme';
+    if (upper.includes('ALERTE')) return 'badge--alerte';
+    if (upper.includes('PERIME')) return 'badge--perime';
+    return '';
   }
 
   private normalizeCountryCode(code: string | null): string {
