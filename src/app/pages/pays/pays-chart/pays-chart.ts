@@ -77,11 +77,20 @@ export class PaysChart implements AfterViewInit, OnChanges {
               <div class="popup-title">${entrepot.nom}</div>
             </div>
           </div>
-          <div class="popup-body mt-2 space-y-1 text-sm text-gray-700">
+          <div class="popup-body mt-2 space-y-2 text-sm text-gray-700">
+            <div><strong>Adresse :</strong> ${entrepot.adresse}</div>
             <div><strong>Responsable :</strong> ${entrepot.responsable}</div>
+            <div>
+              <strong>Email :</strong> 
+              <a href="mailto:${entrepot.emailResponsable}" class="text-blue-600 hover:underline">${entrepot.emailResponsable}</a>
+            </div>
             <div><strong>Lots :</strong> ${entrepot.nombreLots}</div>
+            <div class="pt-1 text-xs text-gray-500">
+              <div>Lat: ${entrepot.latitude.toFixed(4)}</div>
+              <div>Lon: ${entrepot.longitude.toFixed(4)}</div>
+            </div>
           </div>
-          <a href="/pays/${this.normalizeCountryCode(entrepot.codePays).toLowerCase()}/entrepot/${entrepot.id}" class="mt-5 inline-flex w-full justify-center rounded-xl bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700 text-center">Voir l'entrepôt</a>
+          <a href="/pays/${this.normalizeCountryCode(entrepot.codePays).toLowerCase()}/entrepot/${entrepot.id}" class="mt-3 inline-flex w-full justify-center rounded-xl bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700 text-center">Voir le détail</a>
         </div>
       `;
 

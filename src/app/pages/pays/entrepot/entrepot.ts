@@ -1,11 +1,9 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, inject, signal, computed } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DatePipe, NgClass } from '@angular/common';
 import { StatCardComponent } from '../../../components/stat-card/stat-card';
-import { EntrepotInfo } from '../../../shared/models/entrepots/EntrepotInfo';
-import { EntrepotStats } from '../../../shared/models/entrepots/EntrepotStats';
-import { Lot } from '../../../shared/models/entrepots/Lot';
-import { MOCK_ENTREPOTS, MOCK_LOTS, MOCK_STATS } from '../../../app.constants';
+import { EntrepotStore } from '../../../core/stores/entrepot.store';
+import { LotStore } from '../../../core/stores/lot.store';
 
 @Component({
   selector: 'app-entrepot',
@@ -14,39 +12,63 @@ import { MOCK_ENTREPOTS, MOCK_LOTS, MOCK_STATS } from '../../../app.constants';
   templateUrl: './entrepot.html',
   styleUrl: './entrepot.scss',
 })
-export class EntrepotComponent implements OnInit {
-  readonly paysId     = signal<string>('br');
-  readonly entrepotId = signal<string>('ent-001');
-  readonly isLoading  = signal<boolean>(true);
-  readonly hasError   = signal<boolean>(false);
-  readonly entrepot   = signal<EntrepotInfo | null>(null);
-  readonly lots       = signal<Lot[]>([]);
-  readonly stats      = signal<EntrepotStats | null>(null);
+export class EntrepotComponent {
+  private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
+  private readonly entrepotStore = inject(EntrepotStore);
+  private readonly lotStore = inject(LotStore);
 
-  constructor(private route: ActivatedRoute, private router: Router) {}
+  readonly paysId = signal<string>('br');
+  readonly entrepotId = signal<number>(0);
 
-  ngOnInit(): void {
+  readonly isLoading = computed(() => {
+    return this.entrepotStore.loading() || this.lotStore.loading();
+  });
+
+  readonly hasError = computed(() => {
+    return !!this.entrepotStore.error() || !!this.lotStore.error();
+  });
+
+  readonly entrepot = computed(() => {
+    const allEntrepots = this.entrepotStore.entrepots();
+    const id = this.entrepotId();
+    return allEntrepots.find(e => e.id === id) || null;
+  });
+
+  readonly lots = computed(() => {
+    const allLots = this.lotStore.lots();
+    const entrepotId = this.entrepotId();
+    return allLots.filter(lot => lot.entrepotId === entrepotId);
+  });
+
+  readonly stats = computed(() => {
+    const currentLots = this.lots();
+    return {
+      lotsActifs: currentLots.filter(l => l.statut === 'CONFORME').length,
+      totalLots: currentLots.length,
+      qualiteMoyenne: currentLots.length > 0 ? 85 : 0,
+      alertes: currentLots.filter(l => l.statut === 'ALERTE').length
+    };
+  });
+
+  constructor() {
     this.route.paramMap.subscribe(params => {
-      this.paysId.set(params.get('paysId')     ?? 'br');
-      this.entrepotId.set(params.get('entrepotId') ?? 'ent-001');
+      const routeCode = params.get('paysId')?.trim() ?? 'br';
+      const normalizedCode = this.normalizeCountryCode(routeCode);
+      this.paysId.set(normalizedCode.toLowerCase());
+
+      const id = params.get('entrepotId');
+      this.entrepotId.set(id ? Number.parseInt(id, 10) : 0);
+
       this.loadData();
     });
   }
 
   loadData(): void {
-    this.isLoading.set(true);
-    this.hasError.set(false);
+    const codePays = this.normalizeCountryCode(this.paysId());
 
-    // TODO: remplacer par HttpClient — exemple test :
-    // combineLatest([
-    //   this.http.get<EntrepotInfo>(`/api/pays/${this.paysId()}/entrepots/${this.entrepotId()}`),
-    //   this.http.get<Lot[]>(`/api/pays/${this.paysId()}/entrepots/${this.entrepotId()}/lots`),
-    //   this.http.get<EntrepotStats>(`/api/pays/${this.paysId()}/entrepots/${this.entrepotId()}/stats`),
-    // ]).subscribe({ next: ([entrepot, lots, stats]) => { ... }, error: () => this.hasError.set(true) });
-    this.entrepot.set(MOCK_ENTREPOTS[this.entrepotId()] ?? MOCK_ENTREPOTS['ent-001']);
-    this.lots.set([...MOCK_LOTS]);
-    this.stats.set({ ...MOCK_STATS });
-    this.isLoading.set(false);
+    this.entrepotStore.loadEntrepotById(codePays, this.entrepotId());
+    this.lotStore.loadLotsByEntrepot(codePays, this.entrepotId());
   }
 
   goBack(): void {
@@ -54,18 +76,31 @@ export class EntrepotComponent implements OnInit {
   }
 
   voirLot(lotId: string): void {
-    // TODO: créer la page détail lot
     this.router.navigate(['/pays', this.paysId(), 'entrepot', this.entrepotId(), 'lot', lotId]);
   }
 
-  // TODO: activer quand l'API DELETE sera disponible
-  // supprimerLot(lotId: string): void {
-  //   if (!window.confirm('Supprimer ce lot ? Cette action est irréversible.')) return;
-  //   // DELETE /api/pays/:paysId/lots/:lotId
-  //   this.lots.update(list => list.filter(l => l.id !== lotId));
-  // }
-
   formatNum(n: number): string {
     return n.toLocaleString('fr-FR');
+  }
+
+  private normalizeCountryCode(code: string | null): string {
+    if (!code) return 'br';
+    const up = code.toUpperCase().trim();
+    switch (up) {
+      case 'BR':
+      case 'BRA':
+      case 'BRASIL':
+        return 'BR';
+      case 'EC':
+      case 'ECU':
+      case 'ECUADOR':
+        return 'EC';
+      case 'CO':
+      case 'COL':
+      case 'COLOMBIA':
+        return 'CO';
+      default:
+        return up;
+    }
   }
 }
