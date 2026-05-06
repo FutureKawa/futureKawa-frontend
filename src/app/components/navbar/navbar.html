@@ -7,12 +7,42 @@
   </div>
 
   <div class="header-actions">
-    <div class="notification">
+    <button class="notification" (click)="togglePopup()" type="button" title="Voir les alertes">
       <span class="badge">{{ alertesCount() }}</span>
       <svg width="24" height="24" viewBox="0 0 24 24" fill="#4880ff">
         <path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2zm-2 1H8v-6c0-2.48 1.51-4.5 4-4.5s4 2.02 4 4.5v6z"/>
       </svg>
-    </div>
+
+      <!-- Popup des alertes -->
+      @if (isPopupOpen()) {
+        <div class="notification-popup">
+          <div class="popup-header">
+            <h3>Alertes Non Traitées</h3>
+            <button class="close-btn" (click)="closePopup()" title="Fermer">✕</button>
+          </div>
+          
+          @if (alertes().length === 0) {
+            <div class="popup-empty">
+              <p>Aucune alerte</p>
+            </div>
+          } @else {
+            <div class="popup-list">
+              @for (alerte of alertes(); track alerte.id) {
+                <div class="alert-item">
+                  <div class="alert-type" [class]="'alert-type--' + alerte.typeAlerte.toLowerCase()">
+                    {{ alerte.typeAlerte }}
+                  </div>
+                  <div class="alert-content">
+                    <p class="alert-message">{{ alerte.message }}</p>
+                    <p class="alert-date">{{ alerte.dateAlerte | date:'dd/MM/yyyy HH:mm' }}</p>
+                  </div>
+                </div>
+              }
+            </div>
+          }
+        </div>
+      }
+    </button>
 
     <div class="language">
       🇬🇧 English <span>▼</span>
