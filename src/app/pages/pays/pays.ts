@@ -4,6 +4,7 @@ import { PaysChart } from './pays-chart/pays-chart';
 import { StatCardComponent } from '../../components/stat-card/stat-card';
 import { EntrepotStore } from '../../core/stores/entrepot.store';
 import { ConfigurationStore } from '../../core/stores/configuration.store';
+import { AlerteStore } from '../../core/stores/alerte.store';
 import { getCountryByCode, type StatCard } from './pays-data';
 
 @Component({
@@ -18,6 +19,7 @@ export class PaysComponent {
   private readonly route = inject(ActivatedRoute);
   private readonly entrepotStore = inject(EntrepotStore);
   private readonly configurationStore = inject(ConfigurationStore);
+  private readonly alerteStore = inject(AlerteStore);
 
   readonly selectedCountryCode = signal<string | null>(null);
   readonly entrepots = this.entrepotStore.entrepotsByCountry;
@@ -38,6 +40,8 @@ export class PaysComponent {
     const currentEntrepots = this.entrepots();
     const totalEntrepots = currentEntrepots.length;
     const totalLots = currentEntrepots.reduce((sum, entrepot) => sum + entrepot.nombreLots, 0);
+    const alertesByCountry = this.alerteStore.alertesNonTraiteesByCountry();
+    const alertesCount = alertesByCountry.length;
 
     return [
       {
@@ -63,7 +67,7 @@ export class PaysComponent {
       },
       {
         title: 'Alertes critiques',
-        value: '-',
+        value: alertesCount.toLocaleString('fr-FR'),
         icon: '/images/critic.svg',
         percent: '0%',
         trend: 'up'
@@ -80,6 +84,7 @@ export class PaysComponent {
 
       this.selectedCountryCode.set(normalizedCode);
       this.entrepotStore.setSelectedCountryCode(normalizedCode);
+      this.alerteStore.setSelectedCountryCode(normalizedCode);
 
       if (normalizedCode) {
         this.entrepotStore.loadEntrepots(normalizedCode);
