@@ -27,6 +27,10 @@
   </div>
 
   <div>
-      <app-pays-chart [countryCode]="selectedCountry()?.code ?? null"></app-pays-chart>
+    <app-pays-chart
+      [countryCode]="selectedCountryCode()"
+      [countryName]="countryName()"
+      [entrepots]="entrepots()"
+    ></app-pays-chart>
   </div>
 </div>

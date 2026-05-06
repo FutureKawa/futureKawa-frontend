@@ -2,7 +2,7 @@ import { AfterViewInit, Component, ElementRef, Input, OnChanges, SimpleChanges, 
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import * as L from 'leaflet';
-import { entrepots as allEntrepots, getCountryByCode, type Entrepot } from '../pays-data';
+import { EntrepotDto } from '../../../shared/models/api/models';
 
 @Component({
   selector: 'app-pays-chart',
@@ -13,20 +13,17 @@ import { entrepots as allEntrepots, getCountryByCode, type Entrepot } from '../p
 })
 export class PaysChart implements AfterViewInit, OnChanges {
   @Input() countryCode: string | null = null;
+  @Input() countryName: string = 'Pays';
+  @Input() entrepots: EntrepotDto[] = [];
   @ViewChild('map', { static: true }) mapContainer!: ElementRef<HTMLDivElement>;
 
-  entrepots: Entrepot[] = allEntrepots;
-  selectedEntrepot: Entrepot | null = null;
+  selectedEntrepot: EntrepotDto | null = null;
   private map!: L.Map;
   private markers: L.CircleMarker[] = [];
 
-  get countryName(): string {
-    return getCountryByCode(this.countryCode)?.name ?? 'Pays';
-  }
-
   ngAfterViewInit() {
     this.map = L.map(this.mapContainer.nativeElement, {
-      center: [-14.2350, -51.9253],
+      center: [-14.235, -51.9253],
       zoom: 4,
       minZoom: 3,
       maxZoom: 9,
@@ -42,7 +39,7 @@ export class PaysChart implements AfterViewInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (this.map && changes['countryCode']) {
+    if (this.map && (changes['countryCode'] || changes['entrepots'])) {
       this.selectedEntrepot = null;
       this.map.closePopup();
       this.updateMarkers();
@@ -51,8 +48,18 @@ export class PaysChart implements AfterViewInit, OnChanges {
 
   private updateMarkers() {
     this.clearMarkers();
-    const center = getCountryByCode(this.countryCode)?.defaultCenter ?? [-14.2350, -51.9253];
+    console.log('updateMarkers:', {
+      countryCode: this.countryCode,
+      entrepots: this.entrepots,
+      visibleEntrepots: this.visibleEntrepots
+    });
+    const center = this.getMapCenter();
     this.map.setView(center, 4);
+
+    if (!this.visibleEntrepots.length) {
+      console.warn('Aucun entrepôt visible');
+      return;
+    }
 
     this.visibleEntrepots.forEach((entrepot) => {
       const marker = L.circleMarker([entrepot.latitude, entrepot.longitude], {
@@ -67,14 +74,23 @@ export class PaysChart implements AfterViewInit, OnChanges {
         <div class="popup-card">
           <div class="popup-header">
             <div class="font-bold text-lg text-gray-800">
-              <div class="popup-title">${entrepot.name}</div>
+              <div class="popup-title">${entrepot.nom}</div>
             </div>
           </div>
-          <div class="popup-body mt-2 space-y-1 text-sm text-gray-700">
-            <div><strong>Stock :</strong> ${entrepot.stock} ${entrepot.stockUnit}</div>
-            <div><strong>Status :</strong> ${entrepot.status}</div>
+          <div class="popup-body mt-2 space-y-2 text-sm text-gray-700">
+            <div><strong>Adresse :</strong> ${entrepot.adresse}</div>
+            <div><strong>Responsable :</strong> ${entrepot.responsable}</div>
+            <div>
+              <strong>Email :</strong> 
+              <a href="mailto:${entrepot.emailResponsable}" class="text-blue-600 hover:underline">${entrepot.emailResponsable}</a>
+            </div>
+            <div><strong>Lots :</strong> ${entrepot.nombreLots}</div>
+            <div class="pt-1 text-xs text-gray-500">
+              <div>Lat: ${entrepot.latitude.toFixed(4)}</div>
+              <div>Lon: ${entrepot.longitude.toFixed(4)}</div>
+            </div>
           </div>
-          <button href="/entrepot" class="mt-5 inline-flex w-full justify-center rounded-xl bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700">Voir l'entrepôt</button>
+          <a href="/pays/${this.normalizeCountryCode(entrepot.codePays).toLowerCase()}/entrepot/${entrepot.id}" class="mt-3 inline-flex w-full justify-center rounded-xl bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700 text-center">Voir le détail</a>
         </div>
       `;
 
@@ -98,8 +114,46 @@ export class PaysChart implements AfterViewInit, OnChanges {
 
   get visibleEntrepots() {
     return this.countryCode
-      ? this.entrepots.filter(entrepot => entrepot.countryCode === this.countryCode)
+      ? this.entrepots.filter(entrepot => this.normalizeCountryCode(entrepot.codePays) === this.normalizeCountryCode(this.countryCode))
       : this.entrepots;
+  }
+
+  private normalizeCountryCode(code: string | null): string {
+    if (!code) return '';
+    const upper = code.toUpperCase();
+    switch (upper) {
+      case 'BR':
+      case 'BRA':
+        return 'BR';
+      case 'EC':
+      case 'ECU':
+        return 'EC';
+      case 'CO':
+      case 'COL':
+        return 'CO';
+      default:
+        return upper;
+    }
+  }
+
+  private getMapCenter(): [number, number] {
+    const points = this.visibleEntrepots;
+
+    if (points.length === 0) {
+      return [-14.235, -51.9253];
+    }
+
+    const total = points.reduce(
+      (acc, entrepot) => {
+        return {
+          latitude: acc.latitude + entrepot.latitude,
+          longitude: acc.longitude + entrepot.longitude
+        };
+      },
+      { latitude: 0, longitude: 0 }
+    );
+
+    return [total.latitude / points.length, total.longitude / points.length];
   }
 
   closePopup() {

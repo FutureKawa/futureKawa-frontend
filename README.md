@@ -58,7 +58,39 @@ Le **frontend FutureKawa** est une application web Angular permettant de :
 └────────────────────────────────────────────┘
 ```
 
-L’application repose sur une architecture **standalone Angular**, avec un découpage simple entre les pages métier et les composants réutilisables.
+## 🏗️ Architecture
+
+### Architecture frontend
+
+```text
+┌────────────────────────────────────────────┐
+│           App Root (app.ts)                │
+│      Layout global + RouterOutlet          │
+├────────────────────────────────────────────┤
+│           Routing (app.routes.ts)          │
+│      Navigation entre les pages            │
+├────────────────────────────────────────────┤
+│                Pages                       │
+│  welcome / dashboard / pays / entrepot / lots
+├────────────────────────────────────────────┤
+│          Shared Components                 │
+│     navbar / sidebar / stat-card           │
+├────────────────────────────────────────────┤
+│              Core Layer                    │
+│   Services API + State Management (Stores) │
+├────────────────────────────────────────────┤
+│              Styles SCSS                   │
+│   styles globaux + styles par composant    │
+└────────────────────────────────────────────┘
+```
+
+L’application repose sur une architecture **standalone Angular** avec séparation claire des responsabilités :
+
+- **Pages** : Composants de présentation pour chaque route
+- **Shared Components** : Composants UI réutilisables
+- **Core Layer** : Logique métier et gestion d'état
+  - **Services** : Appels API HTTP
+  - **Stores** : Gestion d'état réactive avec Signals
 
 ---
 
@@ -69,6 +101,20 @@ futurekawa-frontend/
 ├── public/                     # Fichiers statiques et assets publics
 └── src/                        # Code source de l'application
     └── app/                    # Cœur de l'application Angular
+        │
+        ├── core/               # Logique métier et gestion d'état (Core Layer)
+        │   ├── services/       # Services API (HTTP calls)
+        │   │   ├── alerte.service.ts
+        │   │   ├── configuration.service.ts
+        │   │   ├── entrepot.service.ts
+        │   │   ├── lot.service.ts
+        │   │   └── mesure.service.ts
+        │   └── stores/         # State management (Signals)
+        │       ├── alerte.store.ts
+        │       ├── configuration.store.ts
+        │       ├── entrepot.store.ts
+        │       ├── lot.store.ts
+        │       └── mesure.store.ts
         │
         ├── components/         # Composants UI réutilisables (Shared)
         │   ├── navbar/
@@ -84,12 +130,59 @@ futurekawa-frontend/
         │   ├── pays/
         │   └── welcome/
         │
-        └── services/           # Logique métier et appels API HTTP (Core)
+        └── shared/             # Utilitaires partagés
+            ├── components/     # Composants partagés additionnels
+            └── index.ts        # Exports centralisés
 ```
 
 ---
 
-## 🧭 Navigation
+## 🏪 State Management (Stores)
+
+L'application utilise des **stores individuels** pour chaque entité métier, basés sur les **Signals Angular** pour une gestion d'état réactive.
+
+### Stores disponibles
+
+| Store | Description | Méthodes principales |
+|-------|-------------|---------------------|
+| `AlerteStore` | Gestion des alertes | `loadAlertes()`, `loadAlertesByLot()`, `loadAllAlertes()` |
+| `EntrepotStore` | Gestion des entrepôts | `loadEntrepots()`, `loadEntrepotById()`, `loadAllEntrepots()` |
+| `LotStore` | Gestion des lots | `loadLots()`, `loadLotByFunctionalId()`, `loadLotsByEntrepot()` |
+| `MesureStore` | Gestion des mesures | `loadMesuresByLot()` |
+| `ConfigurationStore` | Configuration globale | `loadConfiguration()` |
+
+### Utilisation dans un composant
+
+```typescript
+import { inject } from '@angular/core';
+import { AlerteStore } from '../core/stores/alerte.store';
+
+@Component({...})
+export class MyComponent {
+  private alerteStore = inject(AlerteStore);
+
+  // Accès aux données réactives
+  alertes = this.alerteStore.alertes;
+  loading = this.alerteStore.loading;
+  error = this.alerteStore.error;
+
+  // Chargement des données
+  loadData(countryCode: string) {
+    this.alerteStore.setSelectedCountryCode(countryCode);
+    this.alerteStore.loadAlertes(countryCode);
+  }
+}
+```
+
+### Avantages de cette architecture
+
+- ✅ **Séparation claire** : Chaque store gère une seule entité
+- ✅ **Réactivité** : Utilisation des Signals pour les mises à jour automatiques
+- ✅ **Encapsulation** : Les stores contiennent la logique de chargement
+- ✅ **Filtrage intégré** : Computed signals pour le filtrage par pays
+- ✅ **Gestion d'erreurs** : États d'erreur par store
+
+---
 
 Le routage est centralisé dans `app.routes.ts`.
 
