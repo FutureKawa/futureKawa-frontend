@@ -29,7 +29,7 @@ export class EntrepotStore {
   readonly entrepotsByCountry = computed(() => {
     const countryCode = this._selectedCountryCode();
     return countryCode
-      ? this._entrepots().filter(entrepot => entrepot.codePays === countryCode)
+      ? this._entrepots().filter(entrepot => this.normalizeCountryCode(entrepot.codePays) === this.normalizeCountryCode(countryCode))
       : this._entrepots();
   });
 
@@ -107,5 +107,23 @@ export class EntrepotStore {
   resetData(): void {
     this._entrepots.set([]);
     this.clearError();
+  }
+
+  private normalizeCountryCode(code: string | null): string {
+    if (!code) return '';
+    const upper = code.toUpperCase();
+    switch (upper) {
+      case 'BR':
+      case 'BRA':
+        return 'BR';
+      case 'EC':
+      case 'ECU':
+        return 'EC';
+      case 'CO':
+      case 'COL':
+        return 'CO';
+      default:
+        return upper;
+    }
   }
 }

@@ -34,8 +34,8 @@
     <div class="nav-section">
       @if (!isCollapsed) { <div class="nav-title">PAYS</div> }
 
-      @for (country of countries; track country.code) {
-        <a [routerLink]="['/pays', country.code]" routerLinkActive="active" class="nav-item">
+      @for (country of countries(); track country.code) {
+        <a [routerLink]="['/pays', country.code.toLowerCase()]" routerLinkActive="active" class="nav-item">
           <span class="icon">{{ country.emoji }}</span>
           @if (!isCollapsed) { <span class="text">{{ country.name }}</span> }
         </a>
