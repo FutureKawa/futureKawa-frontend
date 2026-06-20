@@ -21,6 +21,20 @@ export interface EntrepotDto {
   nombreLots: number;
 }
 
+export interface EntrepotONEResponse {
+  id: number;
+  nom: string;
+  adresse: string;
+  responsable: string;
+  emailResponsable: string;
+  latitude: number;
+  longitude: number;
+  nombreLots: number;
+  stockTotal: number;
+  lastTemperature: number;
+  lastHumidity: number;
+}
+
 export interface LotDto {
   id: number;
   lotId: string;
@@ -50,12 +64,15 @@ export interface AlerteResponse {
 export interface ConfigurationResponse {
   codePays: string;
   pays: string;
+  totalEntrepots: number;
+  alertes: number;
   tempIdeal: number;
   humiditeIdeal: number;
   tempMin: number;
   tempMax: number;
   humiditeMin: number;
   humiditeMax: number;
+  dureeConservation: number;
 }
 
 export interface EntrepotResponse {

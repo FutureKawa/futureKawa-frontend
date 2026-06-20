@@ -1,5 +1,5 @@
 import { Injectable, inject, signal, computed } from '@angular/core';
-import { EntrepotDto } from '../../shared/models/api/models';
+import {EntrepotDto, EntrepotONEResponse} from '../../shared/models/api/models';
 import { EntrepotService } from '../services/entrepot.service';
 
 @Injectable({
@@ -9,6 +9,8 @@ export class EntrepotStore {
   private readonly entrepotService = inject(EntrepotService);
   // États pour les données
   private readonly _entrepots = signal<EntrepotDto[]>([]);
+
+  private readonly _entrepot = signal<EntrepotONEResponse | null>(null);
 
   // États de chargement
   private readonly _loading = signal(false);
@@ -21,6 +23,7 @@ export class EntrepotStore {
 
   // Getters pour les signaux
   readonly entrepots = this._entrepots.asReadonly();
+  readonly entrepot = this._entrepot.asReadonly();
   readonly loading = this._loading.asReadonly();
   readonly error = this._error.asReadonly();
   readonly selectedCountryCode = this._selectedCountryCode.asReadonly();
@@ -55,7 +58,7 @@ export class EntrepotStore {
     this.entrepotService.getEntrepotById(countryCode, id).subscribe({
       next: (entrepot) => {
         // Pour un seul entrepôt, on peut l'ajouter ou remplacer la liste
-        this.setEntrepots([entrepot]);
+        this.setEntrepot(entrepot);
         this.setLoading(false);
       },
       error: (error) => {
@@ -83,6 +86,10 @@ export class EntrepotStore {
   // Méthodes pour mettre à jour l'état
   setEntrepots(entrepots: EntrepotDto[]): void {
     this._entrepots.set(entrepots);
+  }
+
+  setEntrepot(entrepot: EntrepotONEResponse): void {
+    this._entrepot.set(entrepot);
   }
 
   setSelectedCountryCode(code: string | null): void {

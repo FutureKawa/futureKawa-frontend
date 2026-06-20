@@ -4,6 +4,7 @@ import { DatePipe, NgClass } from '@angular/common';
 import { StatCardComponent } from '../../../components/stat-card/stat-card';
 import { EntrepotStore } from '../../../core/stores/entrepot.store';
 import { LotStore } from '../../../core/stores/lot.store';
+import type { StatCard } from '../../pays/pays-data';
 
 @Component({
   selector: 'app-entrepot',
@@ -21,6 +22,9 @@ export class EntrepotComponent {
   readonly paysId = signal<string>('br');
   readonly entrepotId = signal<number>(0);
 
+  readonly entrepot = this.entrepotStore.entrepot;
+  readonly lots = this.lotStore.lots;
+
   readonly isLoading = computed(() => {
     return this.entrepotStore.loading() || this.lotStore.loading();
   });
@@ -29,29 +33,62 @@ export class EntrepotComponent {
     return !!this.entrepotStore.error() || !!this.lotStore.error();
   });
 
-  readonly entrepot = computed(() => {
-    const allEntrepots = this.entrepotStore.entrepots();
-    const id = this.entrepotId();
-    return allEntrepots.find(e => e.id === id) || null;
-  });
+  readonly entrepotName = computed(() => this.entrepot()?.nom ?? '');
+  readonly entrepotAddress = computed(() => this.entrepot()?.adresse ?? '');
+  readonly entrepotResponsable = computed(() => this.entrepot()?.responsable ?? '');
+  readonly entrepotEmailResponsable = computed(() => this.entrepot()?.emailResponsable ?? '');
+  readonly entrepotLatitude = computed(() => this.entrepot()?.latitude ?? 0);
+  readonly entrepotLongitude = computed(() => this.entrepot()?.longitude ?? 0);
+  readonly entrepotNombreLots = computed(() => this.entrepot()?.nombreLots ?? 0);
+  readonly entrepotStockTotal = computed(() => this.entrepot()?.stockTotal ?? 0);
 
-  readonly lots = computed(() => {
-    const allLots = this.lotStore.lots();
-    const entrepotId = this.entrepotId();
-    return allLots.filter(lot => lot.entrepotId === entrepotId);
-  });
+  readonly stats = computed<StatCard[]>(() => {
 
-  readonly stats = computed(() => {
     const currentLots = this.lots();
-    return {
-      lotsActifs: currentLots.filter(l => l.statut?.toUpperCase().includes('CONFORME')).length,
-      totalLots: currentLots.length,
-      qualiteMoyenne: currentLots.filter(l => l.statut?.toUpperCase().includes('PERIME')).length,
-      alertes: currentLots.filter(l => l.statut?.toUpperCase().includes('ALERTE')).length
-    };
+
+    const totalLots = this.entrepot()?.nombreLots ?? NaN;
+    const temp = this.entrepot()?.lastTemperature ?? NaN;
+    const hum = this.entrepot()?.lastHumidity ?? NaN;
+
+
+    const lotsPerimes = currentLots.filter(lot => {
+      return lot.statut?.toUpperCase().includes('PERIME');
+    }).length;
+
+    return [
+      {
+        title: 'Nombre total de lots',
+        value: totalLots.toString(),
+        imagePath: '/images/totallot.svg',
+        text: 'Total des lots enregistrés dans cet entrepôt',
+        color: "yellow"
+      },
+      {
+        title: 'Temperature actuelle',
+        value: temp + " °C",
+        imagePath: '/images/temp.svg',
+        text: 'Temperature de l\'entrepot prise recement',
+        color: "blue"
+      },
+      {
+        title: 'Humidité actuelle',
+        value: hum + " %",
+        imagePath: '/images/hum.svg',
+        text: 'Humidité de l\'entrepot prise recement',
+        color: "green"
+      },
+      {
+        title: 'Lots périmés',
+        value: this.formatNum(lotsPerimes),
+        imagePath: '/images/critic.svg',
+        text: 'Lots périmés nécessitant une action immédiate',
+        color: "red"
+      },
+    ] satisfies StatCard[];
   });
 
   constructor() {
+
     this.route.paramMap.subscribe(params => {
       const routeCode = params.get('paysId')?.trim() ?? 'br';
       const normalizedCode = this.normalizeCountryCode(routeCode);

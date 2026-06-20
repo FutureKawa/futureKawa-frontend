@@ -5,7 +5,7 @@ import { StatCardComponent } from '../../components/stat-card/stat-card';
 import { EntrepotStore } from '../../core/stores/entrepot.store';
 import { ConfigurationStore } from '../../core/stores/configuration.store';
 import { AlerteStore } from '../../core/stores/alerte.store';
-import { getCountryByCode, type StatCard } from './pays-data';
+import { type StatCard } from './pays-data';
 
 @Component({
   selector: 'app-pay',
@@ -25,61 +25,51 @@ export class PaysComponent {
   readonly entrepots = this.entrepotStore.entrepotsByCountry;
   readonly configuration = this.configurationStore.configuration;
 
-  readonly countryName = computed(() => {
-    const currentConfiguration = this.configuration();
-    if (currentConfiguration) {
-      return currentConfiguration.pays;
-    }
-
-    const currentCode = this.selectedCountryCode();
-
-    return getCountryByCode(currentCode?.toLowerCase() ?? null)?.name ?? 'Pays';
-  });
+  readonly countryName = computed(() => this.configuration()?.pays ?? "");
 
   readonly stats = computed<StatCard[]>(() => {
-    const currentEntrepots = this.entrepots();
-    const totalEntrepots = currentEntrepots.length;
-    const totalLots = currentEntrepots.reduce((sum, entrepot) => sum + entrepot.nombreLots, 0);
-    const alertesByCountry = this.alerteStore.alertesNonTraiteesByCountry();
-    const alertesCount = alertesByCountry.length;
+    const totalEntrepots = this.configuration()?.totalEntrepots ?? NaN;
+    const temp = this.configuration()?.tempIdeal ?? NaN;
+    const hum = this.configuration()?.humiditeIdeal ?? NaN;
+    const alertesCount = this.configuration()?.alertes ?? NaN;
 
     return [
       {
         title: 'Entrepôts actifs',
         value: totalEntrepots.toLocaleString('fr-FR'),
-        icon: '/images/entrepot.svg',
-        percent: '0%',
-        trend: 'up'
+        imagePath: '/images/entrepot.svg',
+        text: 'Nombre total d’entrepôts actifs dans le pays',
+        color: "violet"
       },
       {
-        title: 'Nombre total de lots',
-        value: totalLots.toLocaleString('fr-FR'),
-        icon: '/images/totallot.svg',
-        percent: '0%',
-        trend: 'up'
+        title: 'Temperature idéal',
+        value: temp + " °C",
+        imagePath: '/images/temp.svg',
+        text: 'Les températures idéales pour le stockage du café dans le pays avec une tolerence de ±3°C',
+        color: "blue"
       },
       {
-        title: 'Stock total',
-        value: '-',
-        icon: '/images/totalstock.svg',
-        percent: '0%',
-        trend: 'up'
+        title: 'Humidité idéal',
+        value: hum + " %",
+        imagePath: '/images/hum.svg',
+        text: 'Les humidités idéales pour le stockage du café dans le pays avec une tolerence de ±2%',
+        color: "green"
       },
       {
-        title: 'Alertes critiques',
+        title: 'Nombre d’alertes',
         value: alertesCount.toLocaleString('fr-FR'),
-        icon: '/images/critic.svg',
-        percent: '0%',
-        trend: 'up'
+        imagePath: '/images/critic.svg',
+        text: 'Alertes actives nécessitant une attention',
+        color: "red"
       }
-    ];
+    ] satisfies StatCard[];
   });
 
   constructor() {
     this.route.paramMap.subscribe(params => {
       const routeCode = params.get('code')?.trim() ?? null;
       console.log(routeCode);
-      
+
       const normalizedCode = this.toApiCountryCode(routeCode);
 
       this.selectedCountryCode.set(normalizedCode);
@@ -96,7 +86,6 @@ export class PaysComponent {
       this.configurationStore.resetData();
     });
 
-    // Log whenever the entrepôts list changes
     effect(() => {
       const list = this.entrepots();
       if (list?.length) {
@@ -112,7 +101,6 @@ export class PaysComponent {
 
     const up = code.toUpperCase().trim();
 
-    // Normalize to 2-letter API codes
     if (['ECU', 'ECUADOR', 'EC'].includes(up)) {
       return 'EC';
     }

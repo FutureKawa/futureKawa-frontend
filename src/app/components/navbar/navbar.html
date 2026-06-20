@@ -20,7 +20,7 @@
             <h3>Alertes Non Traitées</h3>
             <button class="close-btn" (click)="closePopup()" title="Fermer">✕</button>
           </div>
-          
+
           @if (alertes().length === 0) {
             <div class="popup-empty">
               <p>Aucune alerte</p>
@@ -29,7 +29,7 @@
             <div class="popup-list">
               @for (alerte of alertes(); track alerte.id) {
                 <div class="alert-item">
-                  <div class="alert-type" [class]="'alert-type--' + alerte.typeAlerte.toLowerCase()">
+                  <div class="alert-type" [class]="'alert-type--' + alerte.typeAlerte">
                     {{ alerte.typeAlerte }}
                   </div>
                   <div class="alert-content">

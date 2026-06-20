@@ -1,0 +1,28 @@
+<svg width="60" height="60" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+
+  <!-- Fond -->
+  <path opacity="0.3"
+        d="M37 0C49.7025 0 60 10.2975 60 23V37C60 49.7025 49.7025 60 37 60H23C10.2975 60 0 49.7025 0 37V23C0 10.2975 10.2975 0 23 0H37Z"
+        fill="#06B6D4"/>
+
+  <!-- Goutte principale -->
+  <path d="M30 14C30 14 20 27 20 36C20 43.732 25.268 49 30 49C34.732 49 40 43.732 40 36C40 27 30 14 30 14Z"
+        stroke="#06B6D4"
+        stroke-width="2.5"
+        stroke-linejoin="round"
+        opacity="0.95"/>
+
+  <!-- Niveau d'eau interne -->
+  <path d="M24 37C26 40 28 41.5 30 41.5C32 41.5 34 40 36 37"
+        stroke="#06B6D4"
+        stroke-width="3"
+        stroke-linecap="round"/>
+
+  <!-- Petite vague interne -->
+  <path d="M25 32C27 34 29 35 30 35C31 35 33 34 35 32"
+        stroke="#06B6D4"
+        stroke-width="2"
+        stroke-linecap="round"
+        opacity="0.7"/>
+
+</svg>

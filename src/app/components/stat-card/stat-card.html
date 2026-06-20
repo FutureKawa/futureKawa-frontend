@@ -1,12 +1,14 @@
 <div class="stat-card">
   <div class="stat-top">
-    <span class="stat-label">{{ title }}</span>
-    <div class="stat-icon stat-icon--{{ iconColor }}">
-      <ng-content select="[icon]"></ng-content>
+    <span class="stat-label">{{ stat().title }}</span>
+
+    <div class="stat-icon stat-icon--{{ stat().color }}">
+      <img [src]="stat().imagePath" [alt]="stat().title" class="stat-image" />
     </div>
   </div>
-  <p class="stat-value">{{ value }}</p>
-  <div class="stat-footer">
-    <ng-content></ng-content>
-  </div>
+  <p class="stat-value">{{ stat().value }}</p>
+
+  <p class="stat-footer">
+    {{ stat().text }}
+  </p>
 </div>
