@@ -5,38 +5,6 @@
 
 ---
 
-## 📋 Table des matières
-
-- [☕ FutureKawa - Frontend Web](#-futurekawa---frontend-web)
-  - [📋 Table des matières](#-table-des-matières)
-  - [🌍 Aperçu](#-aperçu)
-  - [🏗️ Architecture](#️-architecture)
-    - [Architecture frontend](#architecture-frontend)
-  - [📁 Structure du projet](#-structure-du-projet)
-  - [🧭 Navigation](#-navigation)
-  - [🧩 Composants UI](#-composants-ui)
-  - [🚀 Lancement du projet](#-lancement-du-projet)
-  - [🛠️ Build](#️-build)
-  - [📝 Licence](#-licence)
-
----
-
-## 🌍 Aperçu
-
-Le **frontend FutureKawa** est une application web Angular permettant de :
-
-- 📊 **Afficher un dashboard** avec cartes de statistiques et vues principales
-- 🌍 **Naviguer entre plusieurs pages métier**
-- 🏭 **Consulter les entrepôts**
-- 📦 **Consulter les lots**
-- 💳 **Accéder à une page de paiement**
-- 🧭 **Utiliser une navigation claire** avec sidebar et navbar
-- ♻️ **Réutiliser des composants UI** pour garder un projet propre et maintenable
-
----
-
-## 🏗️ Architecture
-
 ### Architecture frontend
 
 ```text
