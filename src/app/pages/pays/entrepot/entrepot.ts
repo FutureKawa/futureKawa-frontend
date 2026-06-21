@@ -126,6 +126,7 @@ export class EntrepotComponent {
     if (upper.includes('CONFORME')) return 'badge--conforme';
     if (upper.includes('ALERTE')) return 'badge--alerte';
     if (upper.includes('PERIME')) return 'badge--perime';
+    if (upper.includes('A_EXPEDIER')) return 'badge--a-expedier';
     return '';
   }
 

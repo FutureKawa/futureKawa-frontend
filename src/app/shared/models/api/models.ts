@@ -45,6 +45,8 @@ export interface LotDto {
   codePays: string;
   entrepotId: number;
   nomEntrepot: string;
+  joursRestants: number;
+  dateMaj: string; // ISO string
   dateStockage: string; // ISO string
   statut: string;
   poids: number;

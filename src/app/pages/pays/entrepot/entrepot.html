@@ -150,7 +150,7 @@
                   <th>Image</th>
                   <th>Type café</th>
                   <th>Date Stokage</th>
-                  <th>Poids</th>
+                  <!-- <th>Poids</th> -->
                   <th>Statut</th>
                   <th>Voir</th>
                 </tr>
@@ -170,7 +170,7 @@
                     </td>
                     <td class="lot-type">{{ lot.typeCafe }}</td>
                     <td class="lot-date">{{ lot.dateStockage | date:'dd/MM/yyyy HH:mm' }}</td>
-                    <td>{{ lot.poids }} kg</td>
+                    <!-- <td>{{ lot.poids }} kg</td> -->
                     <td>
                       <span class="badge" [ngClass]="getBadgeClass(lot.statut)">{{ lot.statut }}</span>
                     </td>
