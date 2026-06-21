@@ -28,10 +28,10 @@ export class PaysComponent {
   readonly countryName = computed(() => this.configuration()?.pays ?? "");
 
   readonly stats = computed<StatCard[]>(() => {
-    const totalEntrepots = this.configuration()?.totalEntrepots ?? NaN;
-    const temp = this.configuration()?.tempIdeal ?? NaN;
-    const hum = this.configuration()?.humiditeIdeal ?? NaN;
-    const alertesCount = this.configuration()?.alertes ?? NaN;
+    const totalEntrepots = this.configuration()?.totalEntrepots ?? 0;
+    const temp = this.configuration()?.tempIdeal ?? 0;
+    const hum = this.configuration()?.humiditeIdeal ?? 0;
+    const alertesCount = this.configuration()?.alertes ?? 0;
 
     return [
       {

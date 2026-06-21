@@ -57,6 +57,8 @@ export class EntrepotStore {
     this.setError(null);
     this.entrepotService.getEntrepotById(countryCode, id).subscribe({
       next: (entrepot) => {
+        console.log(entrepot);
+        
         // Pour un seul entrepôt, on peut l'ajouter ou remplacer la liste
         this.setEntrepot(entrepot);
         this.setLoading(false);

@@ -46,9 +46,9 @@ export class EntrepotComponent {
 
     const currentLots = this.lots();
 
-    const totalLots = this.entrepot()?.nombreLots ?? NaN;
-    const temp = this.entrepot()?.lastTemperature ?? NaN;
-    const hum = this.entrepot()?.lastHumidity ?? NaN;
+    const totalLots = this.entrepot()?.nombreLots ?? 0;
+    const temp = this.entrepot()?.lastTemperature ?? 0;
+    const hum = this.entrepot()?.lastHumidity ?? 0;
 
 
     const lotsPerimes = currentLots.filter(lot => {
@@ -113,7 +113,7 @@ export class EntrepotComponent {
   }
 
   voirLot(lotId: string): void {
-    this.router.navigate(['/pays', this.paysId(), 'entrepot', this.entrepotId(), 'lot', lotId]);
+    this.router.navigate(['/lot', this.paysId(), 'entrepot', this.entrepotId(), 'lot', lotId]);
   }
 
   formatNum(n: number): string {
