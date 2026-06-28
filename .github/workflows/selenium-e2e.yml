@@ -1,0 +1,87 @@
+name: TU Selenium front - exécution CI
+
+# Déclencheurs : à chaque push/PR sur les branches principales, et manuellement (workflow_dispatch)
+# pour pouvoir relancer la suite Selenium sans avoir à recommit.
+on:
+  push:
+    branches:
+      - main
+      - develop
+  pull_request:
+    branches:
+      - main
+      - develop
+  workflow_dispatch:
+
+# Évite d'avoir plusieurs exécutions concurrentes pour la même branche/PR
+# (utile car chaque run démarre son propre serveur sur le port 4200).
+concurrency:
+  group: selenium-e2e-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  selenium-e2e:
+    name: Build + Tests Selenium (headless Chrome)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Récupération du code source
+        uses: actions/checkout@v4
+
+      # Version Node alignée sur les engines déclarés par @angular/cli (^20.19.0 || ^22.12.0 || >=24.0.0)
+      - name: Installation de Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22.12.0'
+          cache: 'npm'
+
+      - name: Installation des dépendances (npm ci)
+        run: npm ci
+
+      # Installe une version stable de Chrome indépendamment de celle préinstallée sur le runner,
+      # afin de garantir un comportement reproductible dans le temps.
+      - name: Installation de Google Chrome
+        id: setup-chrome
+        uses: browser-actions/setup-chrome@v1
+        with:
+          chrome-version: stable
+
+      # Installe automatiquement le ChromeDriver dont la version correspond
+      # exactement à celle de Chrome installée à l'étape précédente.
+      - name: Installation du ChromeDriver correspondant
+        uses: nanasess/setup-chromedriver@v2
+
+      - name: Compilation du frontend Angular (production)
+        run: npm run build
+
+      # start-server-and-test : démarre le serveur statique (npm run e2e:serve),
+      # attend que http://127.0.0.1:4200 réponde, exécute les tests Selenium (npm run e2e:test),
+      # puis arrête automatiquement le serveur (succès ou échec).
+      - name: Exécution des tests Selenium (headless Chrome)
+        run: npm run e2e
+        env:
+          SELENIUM_HEADLESS: 'true'
+          CHROME_BIN: ${{ steps.setup-chrome.outputs.chrome-path }}
+          E2E_BASE_URL: http://127.0.0.1:4200
+
+      # Toujours publier le rapport JUnit, même si les tests ont échoué,
+      # pour pouvoir diagnostiquer rapidement depuis l'onglet "Checks" de la PR.
+      - name: Publication du rapport de tests (JUnit)
+        if: always()
+        uses: mikepenz/action-junit-report@v4
+        with:
+          report_paths: 'e2e/selenium/reports/junit.xml'
+          check_name: 'Résultats Selenium E2E'
+          fail_on_failure: true
+          require_tests: true
+
+      - name: Archivage du rapport et des captures d'écran
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: selenium-e2e-report-${{ github.run_id }}
+          path: |
+            e2e/selenium/reports/
+          retention-days: 14
+          if-no-files-found: warn

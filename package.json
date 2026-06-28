@@ -6,7 +6,11 @@
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "e2e:serve:test:invalid:tkt": "http-server dist/app-kawa/browser -p 4200 -a 127.0.0.1 -s",
+    "e2e:serve": "http-server dist/app-kawa/browser -p 4200 -a 127.0.0.1 -s -P http://127.0.0.1:4200?",
+    "e2e:test": "mocha",
+    "e2e": "start-server-and-test e2e:serve http://127.0.0.1:4200 e2e:test"
   },
   "private": true,
   "packageManager": "npm@11.6.2",
@@ -29,8 +33,15 @@
     "@angular/cli": "^21.2.5",
     "@angular/compiler-cli": "^21.2.0",
     "@types/leaflet": "^1.9.21",
+    "chai": "^4.5.0",
+    "http-server": "^14.1.1",
     "jsdom": "^28.0.0",
+    "mocha": "^10.7.3",
+    "mocha-junit-reporter": "^2.2.1",
+    "mocha-multi-reporters": "^1.5.1",
     "prettier": "^3.8.1",
+    "selenium-webdriver": "^4.27.0",
+    "start-server-and-test": "^2.0.8",
     "typescript": "~5.9.2",
     "vitest": "^4.0.8"
   }
