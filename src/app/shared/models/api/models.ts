@@ -1,13 +1,17 @@
 export interface AlerteDto {
   id: number;
-  lotId: number;
+  entrepotId: number | null;
+  lotId: number | null;
+  type: string;
+  dateAlerte: string;
+  validation: boolean;
   lotIdFonctionnel: string;
   codePays: string;
   typeAlerte: string;
   message: string;
-  dateAlerte: string; // ISO string
   traitee: boolean;
 }
+
 
 export interface EntrepotDto {
   id: number;
@@ -21,24 +25,47 @@ export interface EntrepotDto {
   nombreLots: number;
 }
 
+export interface EntrepotONEResponse {
+  id: number;
+  nom: string;
+  adresse: string;
+  responsable: string;
+  emailResponsable: string;
+  latitude: number;
+  longitude: number;
+  nombreLots: number;
+  stockTotal: number;
+  lastTemperature: number;
+  lastHumidity: number;
+}
+
 export interface LotDto {
   id: number;
   lotId: string;
   codePays: string;
   entrepotId: number;
   nomEntrepot: string;
+  joursRestants: number;
+  dateMaj: string; // ISO string
   dateStockage: string; // ISO string
   statut: string;
   poids: number;
   typeCafe: string;
 }
 
+export type StatutLot = 'CONFORME' | 'NON_CONFORME' | 'EN_ALERTE';
+export type TypeCafe = 'PREMIUM' | 'ARABICA' | 'ROBUSTA' | 'EXCELSO';
+
 export interface MesureDto {
   id: number;
+  espId: number;
+  entrepotId: number;
+  temperature: number; // BigDecimal -> number côté front
+  humidity: number;
+  timestamp: string; // LocalDateTime -> ISO string côté front
+  conforme: boolean;
   lotId: number;
-  temperature: number;
   humidite: number;
-  timestamp: string; // ISO string
 }
 
 export interface AlerteResponse {
@@ -50,12 +77,15 @@ export interface AlerteResponse {
 export interface ConfigurationResponse {
   codePays: string;
   pays: string;
+  totalEntrepots: number;
+  alertes: number;
   tempIdeal: number;
   humiditeIdeal: number;
   tempMin: number;
   tempMax: number;
   humiditeMin: number;
   humiditeMax: number;
+  dureeConservation: number;
 }
 
 export interface EntrepotResponse {

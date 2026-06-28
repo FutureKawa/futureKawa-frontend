@@ -3,5 +3,5 @@ export interface Lot {
   typeCafe: string;
   dateStokage: string;
   poids: number;
-  statut: 'CONFORME' | 'ALERTE' | 'PERIME';
+  statut: 'CONFORME' | 'ALERTE' | 'PERIME' | 'A_EXPEDIER';
 }

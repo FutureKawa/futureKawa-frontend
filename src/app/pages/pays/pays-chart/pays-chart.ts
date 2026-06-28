@@ -90,7 +90,24 @@ export class PaysChart implements AfterViewInit, OnChanges {
               <div>Lon: ${entrepot.longitude.toFixed(4)}</div>
             </div>
           </div>
-          <a href="/pays/${this.normalizeCountryCode(entrepot.codePays).toLowerCase()}/entrepot/${entrepot.id}" class="mt-3 inline-flex w-full justify-center rounded-xl bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700 text-center">Voir le détail</a>
+          <a
+            href="/pays/${this.normalizeCountryCode(entrepot.codePays).toLowerCase()}/entrepot/${entrepot.id}"
+            style="
+              display:flex;
+              justify-content:center;
+              align-items:center;
+              width:100%;
+              padding:12px;
+              margin-top:12px;
+              background:#2563eb;
+              color:white;
+              text-decoration:none;
+              border-radius:12px;
+              font-weight:600;
+            "
+          >
+            Voir le détail
+          </a>
         </div>
       `;
 

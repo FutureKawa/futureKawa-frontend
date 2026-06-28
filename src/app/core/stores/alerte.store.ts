@@ -81,6 +81,8 @@ export class AlerteStore {
     this.setError(null);
     this.alerteService.getAllAlertesAllPays().subscribe({
       next: (alertes) => {
+        console.log(alertes);
+        
         this.setAlertes(alertes);
         this.setLoading(false);
       },

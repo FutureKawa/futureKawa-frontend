@@ -1,4 +1,5 @@
-import { Component, Input } from '@angular/core';
+import { Component, input } from '@angular/core';
+import type { StatCard } from '../../pages/pays/pays-data';
 
 @Component({
   selector: 'app-stat-card',
@@ -7,7 +8,5 @@ import { Component, Input } from '@angular/core';
   styleUrl: './stat-card.scss',
 })
 export class StatCardComponent {
-  @Input() title: string = '';
-  @Input() value: string | number = 0;
-  @Input() iconColor: 'violet' | 'orange' | 'green' | 'pink' = 'violet';
+  readonly stat = input.required<StatCard>();
 }
