@@ -1,1 +1,92 @@
-<p>inventory works!</p>
+<div class="inventory-container">
+  <header class="inventory-header">
+    <h1>Tableau de bord</h1>
+  </header>
+
+  @for (section of sections(); track section.code) {
+    <section class="country-card">
+      <div class="country-card__header">
+        <span class="country-card__title">
+          <span class="country-card__flag">{{ section.flag }}</span>
+          {{ section.code }} - Priorité FIFO (Global)
+        </span>
+      </div>
+
+      <div class="country-card__table-wrapper">
+        <table class="inventory-table">
+          <thead>
+            <tr>
+              <th>ID de lot</th>
+              <th>Pays</th>
+              <th>Quantity</th>
+              <th>Type</th>
+              <th>Temp/Hum</th>
+              <th>Statut</th>
+            </tr>
+          </thead>
+          <tbody>
+            @if (section.loading) {
+              <tr>
+                <td colspan="6" class="inventory-table__state">Chargement…</td>
+              </tr>
+            } @else if (section.error) {
+              <tr>
+                <td colspan="6" class="inventory-table__state inventory-table__state--error">
+                  {{ section.error }}
+                </td>
+              </tr>
+            } @else if (displayedLots(section).length === 0) {
+              <tr>
+                <td colspan="6" class="inventory-table__state">Aucun lot disponible</td>
+              </tr>
+            } @else {
+              @for (lot of displayedLots(section); track lot.id) {
+                <tr>
+                  <td class="lot-id">{{ lotCode(lot) }}</td>
+                  <td>{{ entrepotName(lot) }}</td>
+                  <td>{{ quantity(lot) }}</td>
+                  <td>{{ lot.typeCafe }}</td>
+                  <td>{{ tempHum(section, lot) }}</td>
+                  <td>
+                    <span class="badge" [ngClass]="statutClass(lot.statut)">
+                      {{ statutLabel(lot.statut) }}
+                    </span>
+                  </td>
+                </tr>
+              }
+            }
+          </tbody>
+        </table>
+      </div>
+
+      <div class="country-card__footer">
+        <span class="country-card__range">{{ rangeLabel(section) }}</span>
+
+        @if (section.paged) {
+          <div class="country-card__pager">
+            <button
+              type="button"
+              class="pager-btn"
+              [disabled]="section.page <= 0 || section.loading"
+              (click)="previousPage(section)"
+              aria-label="Page précédente">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M15 18l-6-6 6-6" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+            <button
+              type="button"
+              class="pager-btn"
+              [disabled]="section.page + 1 >= totalPages(section) || section.loading"
+              (click)="nextPage(section)"
+              aria-label="Page suivante">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M9 18l6-6-6-6" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+          </div>
+        }
+      </div>
+    </section>
+  }
+</div>
