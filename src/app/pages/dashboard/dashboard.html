@@ -9,18 +9,42 @@
     }
   </div>
 
-  <!-- Sales Details Section -->
+  <!-- Section unique demandée : Origines et conformité -->
   <div class="sales-section">
     <div class="sales-header">
-      <h2>Sales Details</h2>
-      <select class="month-select">
-        <option>October</option>
-        <option>November</option>
-        <option>December</option>
-      </select>
+      <h2>Origines et conformité des importations</h2>
     </div>
-    <div class="sales-chart-placeholder">
-      <p>Graphique des ventes</p>
+
+    <div class="countries-table-wrapper">
+      <table class="countries-table">
+        <thead>
+          <tr>
+            <th>Zone d'origine</th>
+            <th>Code ISO</th>
+            <th>Dernière synchro</th>
+            <th class="text-right">Statut opérationnel</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (pays of paysStatistiques(); track pays.code) {
+            <tr>
+              <td class="pays-name">
+                <span class="flag-emoji">{{ pays.emoji }}</span>
+                <strong>{{ pays.name }}</strong>
+              </td>
+              <td>
+                <code>{{ pays.code }}</code>
+              </td>
+              <td class="text-muted">{{ pays.dernierSuivi }}</td>
+              <td class="text-right">
+                <span class="status-badge" [ngClass]="pays.classeStatut">
+                  {{ pays.statut }}
+                </span>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
     </div>
   </div>
 </div>
