@@ -84,7 +84,6 @@ export class PaysChart implements AfterViewInit, OnChanges {
               <strong>Email :</strong> 
               <a href="mailto:${entrepot.emailResponsable}" class="text-blue-600 hover:underline">${entrepot.emailResponsable}</a>
             </div>
-            <div><strong>Lots :</strong> ${entrepot.nombreLots}</div>
             <div class="pt-1 text-xs text-gray-500">
               <div>Lat: ${entrepot.latitude.toFixed(4)}</div>
               <div>Lon: ${entrepot.longitude.toFixed(4)}</div>

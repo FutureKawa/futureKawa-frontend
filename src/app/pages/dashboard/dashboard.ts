@@ -20,7 +20,7 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit() {
     this.entrepotStore.loadAllEntrepots();
-    this.lotStore.loadAllLots();
+    this.lotStore.loadLotsForAllCountries();
     this.alerteStore.loadAllAlertes();
   }
 
