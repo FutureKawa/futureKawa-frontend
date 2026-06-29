@@ -1,6 +1,7 @@
 import { Injectable, inject, signal, computed } from '@angular/core';
 import { LotDto } from '../../shared/models/api/models';
 import { LotService } from '../services/lot.service';
+import { forkJoin } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -39,6 +40,8 @@ export class LotStore {
     this.setError(null);
     this.lotService.getAllLots(countryCode).subscribe({
       next: (response) => {
+        console.log('nbr de lots : '+ response);
+        
         this.setLots(response.lots);
         this.setLoading(false);
       },
@@ -59,6 +62,41 @@ export class LotStore {
       },
       error: (error) => {
         this.setError(error.message || 'Erreur lors du chargement du lot');
+        this.setLoading(false);
+      }
+    });
+  }
+
+  loadLotsForAllCountries(): void {
+    this.setLoading(true);
+    this.setError(null);
+
+    forkJoin({
+      co: this.lotService.getAllLots('CO'),
+      ec: this.lotService.getAllLots('EC'),
+      br: this.lotService.getAllLots('BR')
+    }).subscribe({
+      next: ({ co, ec, br }) => {
+        const allLots = [
+          ...co.lots,
+          ...ec.lots,
+          ...br.lots
+        ];
+
+        // Mise à jour du store
+        this.setLots(allLots);
+        console.log('lots : '+this.setLots);
+        
+
+        console.log('CO :', co.lots.length);
+        console.log('EC :', ec.lots.length);
+        console.log('BR :', br.lots.length);
+        console.log('Total :', allLots.length);
+
+        this.setLoading(false);
+      },
+      error: (error) => {
+        this.setError(error.message || 'Erreur lors du chargement des lots');
         this.setLoading(false);
       }
     });
