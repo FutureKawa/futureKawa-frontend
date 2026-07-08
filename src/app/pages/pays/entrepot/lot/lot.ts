@@ -103,8 +103,8 @@ export class Lot {
 
   // ---- Courbes (température / humidité) ----
   // Le LotDto n'expose pas d'historique de mesures pour l'instant.
-  // On affiche uniquement le point de mesure courant (celui de l'entrepôt),
-  // placé sur la courbe à l'heure actuelle. Pas de données fabriquées.
+  // Quand il n'y a qu'une seule valeur, on simule une petite courbe autour
+  // de ce point sans dépasser sa valeur de référence.
 
   readonly viewBox = `0 0 ${VIEW_WIDTH} ${VIEW_HEIGHT}`;
   readonly plotLeft = PADDING.left;
@@ -117,14 +117,38 @@ export class Lot {
     return d.getHours() * 60 + d.getMinutes();
   }
 
+  private buildSeriesFromSingleValue(value: number | null): ChartPoint[] {
+    if (value == null) {
+      return [];
+    }
+
+    const anchorValue = Number(value);
+    const peakProgress = 14 / 24;
+    const pointsCount = 13;
+    const amplitude = Math.min(anchorValue, Math.max(8, anchorValue * 0.7));
+    const lowerBound = Math.max(0, anchorValue - amplitude);
+
+    return Array.from({ length: pointsCount }, (_, index) => {
+      const progress = index / (pointsCount - 1);
+      const curveValue = progress <= peakProgress
+        ? lowerBound + (anchorValue - lowerBound) * Math.pow(progress / peakProgress, 1.7)
+        : lowerBound + (anchorValue - lowerBound) * Math.pow((1 - progress) / (1 - peakProgress), 1.55);
+
+      return {
+        minutes: Math.round(progress * 24 * 60),
+        value: Number(
+          Math.min(anchorValue, Math.max(lowerBound, curveValue)).toFixed(1),
+        ),
+      };
+    });
+  }
+
   readonly temperaturePoints = computed<ChartPoint[]>(() => {
-    const v = this.lotDerniereTemperature();
-    return v != null ? [{ minutes: this.nowMinutes(), value: Number(v) }] : [];
+    return this.buildSeriesFromSingleValue(this.lotDerniereTemperature());
   });
 
   readonly humidityPoints = computed<ChartPoint[]>(() => {
-    const v = this.lotDerniereHumidite();
-    return v != null ? [{ minutes: this.nowMinutes(), value: Number(v) }] : [];
+    return this.buildSeriesFromSingleValue(this.lotDerniereHumidite());
   });
 
   private scaleX(minutes: number): number {

@@ -159,14 +159,7 @@
                 @for (lot of lots(); track lot.id) {
                   <tr>
                     <td>
-                      <div class="lot-thumb">
-                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                          <ellipse cx="12" cy="12" rx="8" ry="5" fill="#92400e" opacity="0.15"/>
-                          <ellipse cx="12" cy="12" rx="7" ry="4" stroke="#92400e" stroke-width="1.5" fill="none"/>
-                          <path d="M5.5 12 Q12 7 18.5 12" stroke="#92400e" stroke-width="1.2" fill="none"/>
-                          <path d="M5.5 12 Q12 17 18.5 12" stroke="#92400e" stroke-width="1.2" fill="none"/>
-                        </svg>
-                      </div>
+                      <img class="w-8" src="images/coffee.svg" alt="Grains de café">
                     </td>
                     <td class="lot-type">{{ lot.typeCafe }}</td>
                     <td class="lot-date">{{ lot.dateStockage | date:'dd/MM/yyyy HH:mm' }}</td>
