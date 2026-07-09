@@ -1,0 +1,7 @@
+{
+  "reporterEnabled": "spec, mocha-junit-reporter",
+  "mochaJunitReporterReporterOptions": {
+    "mochaFile": "e2e/selenium/reports/junit.xml",
+    "testsuitesTitle": "Selenium E2E - futureKawa-frontend"
+  }
+}

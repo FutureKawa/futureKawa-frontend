@@ -39,6 +39,9 @@ testem.log
 /typings
 __screenshots__/
 
+# Rapports des tests Selenium E2E (générés par la CI / en local)
+/e2e/selenium/reports/
+
 # System files
 .DS_Store
 Thumbs.db
